@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RBWM Prep</title>
+<meta name="theme-color" content="#0d6b5f">
+<meta name="description" content="JAIIB RBWM notes, practice questions, daily revision quiz and mock tests.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one-column phone-first drill app; home = today card + chapter ledger; quiz = one question at a time with instant explanation */
+:root{
+  --bg:#eef2f1; --surface:#ffffff; --ink:#132a2a; --muted:#5b6d6c; --line:#d3dcda;
+  --accent:#0d6b5f; --accent-ink:#ffffff; --gold:#c98a12; --good:#1f7a3a; --good-bg:#e3f3e7; --bad:#b4322b; --bad-bg:#fbe7e5; --chip:#e2ebe9;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Source Sans 3",ui-sans-serif,system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1716; --surface:#172221; --ink:#e4eeec; --muted:#93a6a3; --line:#2b3a38; --accent:#3fb3a2; --accent-ink:#06201c; --gold:#e8b04a; --good:#5cc27a; --good-bg:#16301f; --bad:#ef7b72; --bad-bg:#3a1b19; --chip:#22302e; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1716; --surface:#172221; --ink:#e4eeec; --muted:#93a6a3; --line:#2b3a38; --accent:#3fb3a2; --accent-ink:#06201c; --gold:#e8b04a; --good:#5cc27a; --good-bg:#16301f; --bad:#ef7b72; --bad-bg:#3a1b19; --chip:#22302e; color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+img{max-width:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 40px}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.15}
+h1{font-size:1.65rem;font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.2rem;font-weight:800}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.count{display:flex;gap:8px;flex-wrap:wrap}
+.cd{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:.8rem;color:var(--muted)}
+.cd b{color:var(--ink);font-family:var(--mono)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.today{border:2px solid var(--accent)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{background:var(--chip);border-radius:8px;padding:8px;text-align:center}
+.stat b{display:block;font-family:var(--mono);font-size:1.15rem}
+.stat span{font-size:.72rem;color:var(--muted)}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 14px}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.ghost{background:transparent}
+button:disabled{opacity:.5;cursor:default}
+.opt:disabled{opacity:1}
+.opt:disabled:not(.right):not(.wrong){opacity:.55}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{padding:6px 12px;font-size:.88rem}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ledger{display:flex;flex-direction:column}
+.mod{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:12px 0 4px;border-bottom:1px solid var(--line)}
+.ch{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.ch .code{font-family:var(--mono);font-size:.8rem;background:var(--chip);border-radius:6px;padding:2px 6px;min-width:3.2em;text-align:center}
+.ch .name{min-width:0}
+.ch .name div{font-size:.95rem}
+.bar{height:5px;background:var(--chip);border-radius:3px;margin-top:4px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar .s{background:var(--good)} .bar .l{background:var(--gold)} .bar .w{background:var(--bad)}
+.ch .act{display:flex;gap:6px}
+.ch .act button{padding:5px 9px;font-size:.8rem}
+.studied[aria-pressed="true"]{background:var(--good-bg);border-color:var(--good);color:var(--good);font-weight:700}
+/* quiz */
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.prog{height:6px;background:var(--chip);border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.stem{font-size:1.05rem;white-space:pre-line}
+.tag{font-family:var(--mono);font-size:.75rem;background:var(--chip);border-radius:6px;padding:2px 7px;color:var(--muted)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:grid;grid-template-columns:2em 1fr;gap:6px;text-align:left;align-items:start;padding:12px}
+.opt .l{font-family:var(--mono);font-weight:500;color:var(--muted)}
+.opt.right{background:var(--good-bg);border-color:var(--good);border-width:2px}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);border-width:2px}
+.opt.right .l{color:var(--good)} .opt.wrong .l{color:var(--bad)}
+.exp{border-left:4px solid var(--good);background:var(--chip);border-radius:0 10px 10px 0;padding:12px;display:flex;flex-direction:column;gap:6px}
+.exp.bad{border-left-color:var(--bad)}
+.exp p{margin:0}
+.verdict{font-family:var(--display);font-weight:800;font-size:1.1rem}
+.verdict.ok{color:var(--good)} .verdict.no{color:var(--bad)}
+.rem{color:var(--accent);font-weight:600}
+label.guess{display:flex;gap:8px;align-items:center;font-size:.9rem;color:var(--muted)}
+.result-big{font-family:var(--display);font-size:3rem;font-weight:800;line-height:1}
+.list{display:flex;flex-direction:column;gap:6px}
+.wrongitem{display:flex;gap:8px;align-items:baseline;font-size:.92rem}
+.note{font-size:.82rem;color:var(--muted)}
+.banner{background:var(--chip);border-radius:8px;padding:8px 12px;font-size:.85rem}
+
+/* notes */
+.notes{display:flex;flex-direction:column;gap:10px}
+.notes h3{font-size:1.05rem;margin-top:6px}
+.notes p,.notes ul{margin:0}
+.notes ul{padding-left:1.2em;display:flex;flex-direction:column;gap:4px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+.notes table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:420px}
+.notes th{background:var(--chip);text-align:left}
+.notes th,.notes td{border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:top}
+.notes .box{background:var(--chip);border-radius:8px;padding:10px 12px}
+.notes .box.key{border-left:4px solid var(--accent)}
+.notes .box.trap{border-left:4px solid var(--bad);background:var(--bad-bg)}
+.notes .tag{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em}
+.notes .tag.new{background:var(--gold);color:#1b1300}
+.navrow{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+/* mock */
+.timer{font-family:var(--mono);font-size:1rem;padding:4px 10px;border-radius:8px;background:var(--chip)}
+.timer.low{background:var(--bad-bg);color:var(--bad)}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.grid button{padding:5px 0;font-family:var(--mono);font-size:.75rem;border-radius:6px}
+.grid button.ans{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.grid button.flag{outline:2px solid var(--gold);outline-offset:-2px}
+.grid button.cur{border:2px solid var(--ink)}
+.opt.sel{border:2px solid var(--accent);background:var(--chip)}
+@media (max-width:540px){.ch{grid-template-columns:auto 1fr}.ch .act{grid-column:2}}
+@media (max-width:440px){.stats{grid-template-columns:repeat(2,1fr)} h1{font-size:1.4rem}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head><body>
+<div class="wrap" id="app">
+  <header>
+    <div><div class="eyebrow">JAIIB Nov 2026</div><h1>RBWM Prep</h1></div>
+    <div class="count" id="count"></div>
+  </header>
+  <div class="card"><p class="muted" style="margin:0">Loading your question bank…</p></div>
+</div>
+
+<script>
+const CH={
+A1:'Retail Banking: Introduction',A2:'Role within the Bank — Business Models',A3:'Retail vs Corporate Banking',A4:'Branch Profitability',
+B1:'Customer Requirements',B2:'Product Development Process',B3:'Credit Scoring & Types of Risk',B4:'Retail Liability Products (Deposits)',B5:'Retail Asset Products',B6:'Credit & Debit Cards',B7:'Remittance Products / Payment Systems',B8:'Digitisation of Retail Products',B9:'Role of AI & Technology',B10:'Recovery of Retail Loans',B11:'Management Information Systems',B12:'Securitisation',
+C1:'Marketing: Introduction',C2:'Delivery Channels',C3:'Delivery Models',C4:'Customer Relationship Management',C5:'Service Standards — BCSBI, Ombudsman',C6:'Marketing Information Systems',
+D1:'Importance of Wealth Management',D2:'Investment Management & PMS',D3:'Tax Planning',D4:'Other Financial Services',
+E1:'Home Loan Appraisal & Mortgage',E2:'Tax Benefits of Home Loans',E3:'Mortgage Advice & EMI Maths',E4:'Valuation & Reverse Mortgage'};
+const MODS=[['A','Module A — Retail Banking'],['B','Module B — Retail Products & Recovery'],['C','Module C — Marketing & Support Services'],['D','Module D — Wealth Management'],['E','Home Loans — Additional Reading']];
+const EXAMS=[['RBWM exam','2026-11-28']];
+const MOCK_N=100, MOCK_MIN=120, MOCK_W={A:12,B:42,C:12,D:16,E:18};
+const INTERVALS=[1,3,7,14,30];
+const DAILY=15, MAXDUE=10, TOPIC=10;
+
+let BANK=[], BYID={}, S=null, db=null, saving=Promise.resolve(), view='home', Q=null;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function addDays(s,n){const [y,m,d]=s.split('-').map(Number);const t=new Date(y,m-1,d+n);return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0')}
+function daysTo(s){const [y,m,d]=s.split('-').map(Number);const [a,b,c]=today().split('-').map(Number);return Math.round((new Date(y,m-1,d)-new Date(a,b-1,c))/864e5)}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function blank(){return {studied:[],cards:{},sessions:[],current:null,v:1}}
+
+// ---------- storage ----------
+const LS='jaiib-drill-v1';
+function lsGet(){try{return JSON.parse(localStorage.getItem(LS)||'null')}catch(e){return null}}
+function lsSet(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+let dirty=false, writing=false, uid=null, USER=null, PARTNERS=[];
+function save(){lsSet()}
+let syncMsg='';
+function setSync(m){syncMsg=m; const el=$('#sync'); if(el) el.textContent=m}
+
+async function boot(){
+  renderCount();
+  try{const r=await fetch('bank.json',{cache:'no-cache'}); BANK=await r.json()}catch(e){try{const r=await fetch('bank.json'); BANK=await r.json()}catch(e2){$('#app').innerHTML+='<div class="card">Could not load the questions. Connect to the internet once and reopen the app.</div>';return}}
+  BANK.forEach(q=>BYID[q.id]=q);
+  S=Object.assign(blank(),lsGet()||{});
+  try{if(navigator.storage&&navigator.storage.persist) navigator.storage.persist()}catch(e){}
+  setSync('Progress is saved on this phone. Use Backup now and then so nothing is lost.');
+  render();
+}
+
+// ---------- scheduling ----------
+function card(id){return S.cards[id]}
+function isDue(id){const c=card(id);return c&&c.d<=today()}
+function chStats(ch){
+  const qs=BANK.filter(q=>q.ch===ch); let solid=0,learn=0,weak=0,seen=0;
+  qs.forEach(q=>{const c=card(q.id); if(!c) return; seen++; if(c.b>=3) solid++; else if(c.lw) weak++; else learn++});
+  return {n:qs.length,seen,solid,learn,weak};
+}
+function dueList(){return BANK.filter(q=>isDue(q.id)).sort((a,b)=>card(a.id).d<card(b.id).d?-1:1)}
+function newList(chs){return BANK.filter(q=>chs.includes(q.ch)&&!card(q.id))}
+function interleave(qs){ // spread chapters
+  const g={}; shuffle(qs).forEach(q=>(g[q.ch]=g[q.ch]||[]).push(q));
+  const keys=shuffle(Object.keys(g)); const out=[]; let more=true;
+  while(more){more=false; keys.forEach(k=>{if(g[k].length){out.push(g[k].shift());more=true}})}
+  return out;
+}
+function buildDaily(){
+  const due=dueList().slice(0,MAXDUE);
+  const fresh=interleave(newList(S.studied)).filter(q=>!due.includes(q)).slice(0,DAILY-due.length);
+  let qs=due.concat(fresh);
+  if(qs.length<DAILY){ // top up with weakest seen questions from studied chapters
+    const pool=BANK.filter(q=>S.studied.includes(q.ch)&&card(q.id)&&!qs.includes(q)).sort((a,b)=>(card(a.id).b-card(b.id).b));
+    qs=qs.concat(pool.slice(0,DAILY-qs.length));
+  }
+  return {due:due.length,fresh:fresh.length,qs:shuffle(qs).map(q=>q.id)};
+}
+function buildTopic(ch){
+  const all=BANK.filter(q=>q.ch===ch);
+  const unseen=shuffle(all.filter(q=>!card(q.id)));
+  const weak=shuffle(all.filter(q=>card(q.id)&&card(q.id).b<3));
+  const rest=shuffle(all.filter(q=>card(q.id)&&card(q.id).b>=3));
+  return unseen.concat(weak,rest).slice(0,TOPIC).map(q=>q.id);
+}
+function mistakes(){return BANK.filter(q=>{const c=card(q.id);return c&&c.lw})}
+
+function grade(id,ok,guessed){
+  const t=today(); const c=S.cards[id]||{b:0,r:0,w:0};
+  if(ok&&!guessed){c.b=Math.min((c.lw?0:c.b)+1,INTERVALS.length-1); c.r++; c.lw=false; c.d=addDays(t,INTERVALS[c.b])}
+  else{c.b=0; if(ok) c.r++; else c.w++; c.lw=true; c.d=addDays(t,1)}
+  c.t=t; S.cards[id]=c;
+}
+
+
+// ---------- notes ----------
+let NOTES=null;
+async function notesView(ch){
+  view='notes'; window.scrollTo(0,0);
+  const app=$('#app'); const hdr=app.querySelector('header').outerHTML;
+  if(!NOTES){app.innerHTML=hdr+'<div class="card">Loading notes…</div>'; try{NOTES=await (await fetch('notes.json')).json()}catch(e){app.innerHTML=hdr+'<div class="card">Could not load the notes. Check your connection and try again. <button id="home">Back</button></div>'; on2('home',render); return}}
+  const keys=Object.keys(CH); const i=keys.indexOf(ch); const prev=keys[i-1], next=keys[i+1];
+  const st=S.studied.includes(ch); const s=chStats(ch);
+  const html=(NOTES[ch]||'<p>No notes for this chapter.</p>').replace(/<table/g,'<div class="tw"><table').replace(/<\/table>/g,'</table></div>');
+  app.innerHTML=hdr+`<section class="card"><div class="navrow"><button class="ghost small" id="home">← All chapters</button><span class="tag">${ch} · ${s.n} questions</span></div>
+  <h2>${esc(ch)} — ${esc(CH[ch])}</h2><div class="notes">${html}</div>
+  <div class="row"><button class="primary" id="prac">Practise ${ch} now</button><button class="studied" id="mk" aria-pressed="${st}">${st?'✓ Studied — in daily quiz':'Mark studied'}</button></div>
+  <div class="navrow">${prev?`<button class="ghost" id="prev">← ${prev}</button>`:'<span></span>'}${next?`<button class="ghost" id="next2">${next} →</button>`:''}</div></section>`;
+  on2('home',render); on2('prev',()=>notesView(prev)); on2('next2',()=>notesView(next));
+  on2('prac',()=>start('topic',buildTopic(ch),ch));
+  on2('mk',()=>{const k=S.studied.indexOf(ch); if(k<0) S.studied.push(ch); else S.studied.splice(k,1); save(); notesView(ch)});
+}
+// ---------- mock test ----------
+function mockCardHtml(){
+  const m=S.mock; const last=(S.mocks||[]).slice(-3).reverse();
+  const body=m&&!m.done?`<p style="margin:0">Mock in progress — <b>${Object.keys(m.ans).length}/${m.ids.length}</b> answered, ${fmtLeft(m.end-Date.now())} left.</p><div class="row"><button class="primary" id="mockresume">Resume mock</button></div>`
+   :`<p style="margin:0">${MOCK_N} questions · ${MOCK_MIN} minutes · all modules, weighted like recent papers · no answers until you submit · no negative marking. Pass mark 50; aim for 70.</p><div class="row"><button id="mock">Start a full mock</button></div>`;
+  return `<section class="card"><h2>Full mock test</h2>${body}${last.length?`<div class="list">${last.map(x=>`<div class="wrongitem"><span class="mono">${x.t.slice(5)}</span><span>Mock</span><b class="mono" style="margin-left:auto;color:${x.c>=70?'var(--good)':x.c>=50?'var(--gold)':'var(--bad)'}">${x.c}/${x.n}</b></div>`).join('')}</div>`:''}</section>`;
+}
+function fmtLeft(ms){ms=Math.max(0,ms);const m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000);return m+':'+String(s).padStart(2,'0')}
+function mockStart(){
+  const by={}; BANK.forEach(q=>(by[q.ch[0]]=by[q.ch[0]]||[]).push(q));
+  let ids=[];
+  Object.entries(MOCK_W).forEach(([m,k])=>{const pool=by[m]||[];
+    // prefer questions not yet seen, spread across chapters
+    const fresh=interleave(pool.filter(q=>!card(q.id))), seen=interleave(pool.filter(q=>card(q.id)));
+    ids=ids.concat(fresh.concat(seen).slice(0,k).map(q=>q.id))});
+  S.mock={ids:shuffle(ids),ans:{},flag:{},i:0,start:Date.now(),end:Date.now()+MOCK_MIN*60000,t:today(),done:false};
+  save(); mockView();
+}
+let mockTimer=null;
+function mockView(){
+  view='mock'; const m=S.mock; if(!m) return render();
+  if(Date.now()>=m.end) return mockSubmit(true);
+  const app=$('#app'); const hdr=app.querySelector('header').outerHTML;
+  const q=BYID[m.ids[m.i]];
+  app.innerHTML=hdr+`<section class="card">
+  <div class="qtop"><span class="eyebrow">Mock · Q${m.i+1} of ${m.ids.length}</span><span class="timer" id="tm">${fmtLeft(m.end-Date.now())}</span></div>
+  <div class="row"><span class="tag">${esc(q.ch)}</span><label class="guess" style="margin-left:auto"><input type="checkbox" id="fl" ${m.flag[q.id]?'checked':''}> Mark for review</label></div>
+  <div class="stem">${esc(q.s)}</div>
+  <div class="opts">${q.o.map((o,i)=>`<button class="opt ${m.ans[q.id]===i?'sel':''}" data-i="${i}" id="opt${i}"><span class="l">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
+  <div class="navrow"><button id="mp" ${m.i?'':'disabled'}>← Previous</button>${m.ans[q.id]!==undefined?'<button class="ghost" id="clr">Clear answer</button>':''}<button class="primary" id="mn">${m.i<m.ids.length-1?'Next →':'Review'}</button></div>
+  </section>
+  <section class="card"><div class="row" style="justify-content:space-between"><h2>Question palette</h2><span class="note">${Object.keys(m.ans).length} answered · ${Object.values(m.flag).filter(Boolean).length} marked</span></div>
+  <div class="grid">${m.ids.map((id,k)=>`<button data-go="${k}" class="${m.ans[id]!==undefined?'ans':''} ${m.flag[id]?'flag':''} ${k===m.i?'cur':''}" aria-label="Question ${k+1}">${k+1}</button>`).join('')}</div>
+  <div class="row"><button class="primary" id="sub">Submit mock</button><button class="ghost" id="pause">Save &amp; exit (timer keeps running)</button></div><div id="confirm"></div></section>`;
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{m.ans[q.id]=+b.dataset.i; save(); mockView()});
+  app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{m.i=+b.dataset.go; save(); mockView()});
+  $('#fl').onchange=e=>{m.flag[q.id]=e.target.checked; save(); mockView()};
+  on2('mp',()=>{m.i--; save(); mockView()}); on2('mn',()=>{if(m.i<m.ids.length-1){m.i++; save(); mockView()} else {const g=$('.grid'); if(g) g.scrollIntoView({behavior:'smooth'})}});
+  on2('clr',()=>{delete m.ans[q.id]; save(); mockView()});
+  on2('pause',()=>{clearInterval(mockTimer); render()});
+  on2('sub',()=>{const left=m.ids.length-Object.keys(m.ans).length; $('#confirm').innerHTML=`<div class="banner" style="margin-top:8px">${left?`${left} unanswered. `:''}Submit now? <button class="primary" id="yes">Yes, submit</button> <button class="ghost" id="no">Keep going</button></div>`; on2('yes',()=>mockSubmit(false)); on2('no',()=>{$('#confirm').innerHTML=''})});
+  clearInterval(mockTimer); mockTimer=setInterval(()=>{const el=$('#tm'); if(view!=='mock'||!el){clearInterval(mockTimer);return} const l=m.end-Date.now(); el.textContent=fmtLeft(l); el.classList.toggle('low',l<10*60000); if(l<=0){clearInterval(mockTimer); mockSubmit(true)}},1000);
+  window.scrollTo(0,0);
+}
+function mockSubmit(timeUp){
+  clearInterval(mockTimer); const m=S.mock; if(!m) return render();
+  const res=m.ids.map(id=>({id,pick:m.ans[id],ok:m.ans[id]===BYID[id].a}));
+  res.forEach(r=>{if(r.pick!==undefined) grade(r.id,r.ok,false)});
+  const c=res.filter(r=>r.ok).length, wrong=res.filter(r=>!r.ok);
+  S.mocks=(S.mocks||[]).concat([{t:m.t,n:m.ids.length,c,mins:Math.round((Math.min(Date.now(),m.end)-m.start)/60000),wrong:wrong.map(r=>r.id)}]).slice(-30);
+  S.sessions.push({t:today(),m:'mock',n:m.ids.length,c,wrong:wrong.map(r=>r.id)});
+  S.mock=null; save();
+  const byM={}; res.forEach(r=>{const k=BYID[r.id].ch[0]; byM[k]=byM[k]||[0,0]; byM[k][1]++; if(r.ok) byM[k][0]++});
+  const byC={}; res.forEach(r=>{const k=BYID[r.id].ch; byC[k]=byC[k]||[0,0]; byC[k][1]++; if(r.ok) byC[k][0]++});
+  const weak=Object.entries(byC).filter(([k,[a,b]])=>b>=2&&a/b<0.6).sort((x,y)=>x[1][0]/x[1][1]-y[1][0]/y[1][1]).slice(0,6);
+  view='result'; window.scrollTo(0,0);
+  const app=$('#app'); const hdr=app.querySelector('header').outerHTML;
+  const verdict=c>=70?'Comfortable pass zone.':c>=50?'Pass, but no safety margin — target 70.':'Below the pass mark of 50. Focus on the weak chapters below.';
+  app.innerHTML=hdr+`<section class="card today"><div class="eyebrow">Mock result${timeUp?' · time up, auto-submitted':''}</div>
+  <div class="row" style="align-items:baseline"><span class="result-big mono">${c}/${res.length}</span><span class="muted">${res.filter(r=>r.pick===undefined).length} unanswered</span></div>
+  <p style="margin:0">${verdict}</p>
+  <div class="list">${MODS.map(([k,t])=>byM[k]?`<div class="wrongitem"><span>${esc(t)}</span><b class="mono" style="margin-left:auto">${byM[k][0]}/${byM[k][1]}</b></div>`:'').join('')}</div>
+  ${weak.length?`<div><div class="eyebrow" style="margin-bottom:4px">Chapters to revise</div><div class="list">${weak.map(([k,[a,b]])=>`<div class="wrongitem"><span class="code mono">${k}</span><span>${esc(CH[k])}</span><b class="mono" style="margin-left:auto;color:var(--bad)">${a}/${b}</b><button data-notes="${k}" class="small" style="padding:4px 9px">Notes</button></div>`).join('')}</div></div>`:''}
+  <div class="row"><button class="primary" id="home">Back to home</button></div></section>
+  <section class="card"><h2>Review answers</h2><div class="list">${wrong.map(r=>{const q=BYID[r.id];return `<details><summary class="small">${esc(q.ch)} · ${r.pick===undefined?'not answered':'you chose '+'ABCD'[r.pick]} · answer ${'ABCD'[q.a]} — ${esc(q.s.split('\n')[0].slice(0,90))}${q.s.length>90?'…':''}</summary><div class="exp bad" style="margin-top:6px"><div class="stem small">${esc(q.s)}</div><div class="small">${q.o.map((o,i)=>`<div style="${i===q.a?'color:var(--good);font-weight:700':''}">${'ABCD'[i]}. ${esc(o)}</div>`).join('')}</div><p><b>Why:</b> ${esc(q.w)}</p>${q.n?`<p><b>Others:</b> ${esc(q.n)}</p>`:''}${q.r?`<p class="rem">Remember: ${esc(q.r)}</p>`:''}</div></details>`}).join('')||'<p class="muted">All correct.</p>'}</div></section>`;
+  on2('home',render); app.querySelectorAll('[data-notes]').forEach(b=>b.onclick=()=>notesView(b.dataset.notes));
+}
+
+// ---------- views ----------
+function renderCount(){
+  $('#count').innerHTML=EXAMS.map(([n,d])=>{const k=daysTo(d);return `<span class="cd">${esc(n)} <b>${k>0?k+' days':'today'}</b></span>`}).join('');
+}
+function accOf(st){const cs=Object.values(st.cards||{});const r=cs.reduce((a,c)=>a+c.r,0),w=cs.reduce((a,c)=>a+c.w,0);return r+w?Math.round(100*r/(r+w))+'%':'—'}
+function qtype(q){
+  const s=q.s;
+  if(/^Match/i.test(s)||/\bMatch\b.*:/.test(s)) return 'Match the following';
+  if(/^Consider/i.test(s)||/Which (of the above |of these )?(are|is) (correct|incorrect)/i.test(s)||/\n1\./.test(s)) return 'Statement-based';
+  if(/(₹|%|\d{2,}).*(calculate|is:|will be|closest|works out|equals|amount|value|EMI|interest)/i.test(s.replace(/\n/g,' '))) return 'Numerical';
+  if(/^(Mr\.|Mrs\.|Ms\.|Shri|A customer|A bank|A branch|A borrower|A depositor|An? [a-z-]+ (customer|account|investor)|[A-Z][a-z]+ (has|had|is|wants|opened|took))/.test(s)) return 'Case-based';
+  return 'Direct / concept';
+}
+function analysisHtml(){
+  const rows=[], types={};
+  Object.keys(CH).forEach(ch=>{let r=0,w=0; BANK.forEach(q=>{if(q.ch!==ch) return; const c=card(q.id); if(c){r+=c.r;w+=c.w}}); if(r+w>=3) rows.push({ch,r,w,p:r/(r+w)})});
+  BANK.forEach(q=>{const c=card(q.id); if(!c) return; const t=qtype(q); types[t]=types[t]||[0,0]; types[t][0]+=c.r; types[t][1]+=c.r+c.w});
+  if(!rows.length) return `<section class="card"><h2>My analysis</h2><p class="muted" style="margin:0">Answer a few rounds and this shows your weakest chapters and question types.</p></section>`;
+  rows.sort((a,b)=>a.p-b.p);
+  const weak=rows.filter(x=>x.p<0.7).slice(0,5);
+  const last7=S.sessions.filter(s=>s.t>=addDays(today(),-6)); const l7n=last7.reduce((a,s)=>a+s.n,0), l7c=last7.reduce((a,s)=>a+s.c,0);
+  return `<section class="card"><h2>My analysis</h2>
+  <div class="note">Last 7 days: <b class="mono">${l7c}/${l7n}</b>${l7n?` (${Math.round(100*l7c/l7n)}%)`:''} correct · target 70%</div>
+  <div><div class="eyebrow" style="margin-bottom:4px">Weakest chapters</div>${weak.length?`<div class="list">${weak.map(x=>`<div class="wrongitem"><span class="code mono">${x.ch}</span><span>${esc(CH[x.ch])}</span><b class="mono" style="margin-left:auto;color:var(--bad)">${Math.round(100*x.p)}%</b><button data-topic="${x.ch}" class="small" style="padding:4px 9px">Fix</button></div>`).join('')}</div>`:'<p class="note" style="margin:0">No chapter below 70% yet.</p>'}</div>
+  <div><div class="eyebrow" style="margin-bottom:4px">By question type</div><div class="list">${Object.entries(types).sort((a,b)=>a[1][0]/a[1][1]-b[1][0]/b[1][1]).map(([t,[r,n]])=>`<div class="wrongitem"><span>${esc(t)}</span><b class="mono" style="margin-left:auto;color:${r/n>=0.7?'var(--good)':'var(--bad)'}">${Math.round(100*r/n)}%</b><span class="note mono">${r}/${n}</span></div>`).join('')}</div></div>
+  </section>`;
+}
+function backupHtml(){
+  const last=S.lastBackup?new Date(S.lastBackup).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'never';
+  return `<section class="card"><h2>Backup</h2><p class="note" style="margin:0">Your progress lives on this phone. Save a backup file every few days (last backup: <b>${last}</b>). To move to a new phone, restore that file there.</p>
+  <div class="row"><button id="bk">Save backup file</button><button class="ghost" id="rs">Restore from file</button><input type="file" id="rsf" accept=".json,application/json" hidden></div><div id="bkmsg" class="note"></div></section>`;
+}
+function doBackup(){
+  S.lastBackup=Date.now(); save();
+  const blob=new Blob([JSON.stringify({app:'rbwm-prep',v:1,saved:new Date().toISOString(),state:S})],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='rbwm-progress-'+today()+'.json'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove()},1000);
+  render();
+}
+function doRestore(file){
+  const fr=new FileReader();
+  fr.onload=()=>{try{const d=JSON.parse(fr.result); if(!d||d.app!=='rbwm-prep'||!d.state||typeof d.state.cards!=='object') throw 0; S=Object.assign(blank(),d.state); save(); render(); setTimeout(()=>{const m=$('#bkmsg'); if(m) m.textContent='Progress restored from backup of '+String(d.saved).slice(0,10)+'.'},50)}catch(e){const m=$('#bkmsg'); if(m) m.textContent='That file is not an RBWM Prep backup. Choose the file named rbwm-progress-….json.'}};
+  fr.readAsText(file);
+}
+function partnerHtml(){
+  if(!PARTNERS.length) return '';
+  return `<section class="card"><h2>Learner progress</h2><div class="list">${PARTNERS.map(p=>{const s=Object.assign(blank(),p.s);const done=s.sessions.some(x=>x.t===today());
+    return `<div class="wrongitem"><b>${esc(p.name)}</b><span class="note">${streakOf(s)}-day streak · ${Object.keys(s.cards).length} tried · ${accOf(s)} accuracy</span><span class="tag" style="margin-left:auto">${done?'done today':'not yet today'}</span></div>`}).join('')}</div></section>`;
+}
+function streak(){return streakOf(S)}
+function streakOf(st){
+  const days=new Set((st.sessions||[]).map(s=>s.t)); let k=0, d=today();
+  if(!days.has(d)) d=addDays(d,-1);
+  while(days.has(d)){k++; d=addDays(d,-1)}
+  return k;
+}
+function render(){
+  view='home'; Q=null;
+  const app=$('#app'); const hdr=app.querySelector('header').outerHTML;
+  const d=buildDaily(); const seen=Object.keys(S.cards).length;
+  const totR=Object.values(S.cards).reduce((a,c)=>a+c.r,0), totW=Object.values(S.cards).reduce((a,c)=>a+c.w,0);
+  const acc=totR+totW?Math.round(100*totR/(totR+totW))+'%':'—';
+  const doneToday=S.sessions.some(s=>s.t===today()&&s.m==='daily');
+  const cur=S.current;
+  const mis=mistakes().length;
+  let todayBody;
+  if(cur&&cur.ids&&cur.i<cur.ids.length){
+    todayBody=`<p style="margin:0">You have a quiz in progress: <b>${cur.i} of ${cur.ids.length}</b> answered.</p><div class="row"><button class="primary" id="resume">Continue quiz</button><button class="ghost" id="drop">Discard it</button></div>`;
+  } else if(!S.studied.length){
+    todayBody=`<p style="margin:0">Mark the chapters you have studied in the list below. Your daily quiz is built from those chapters, plus any questions due for revision.</p>`;
+  } else {
+    todayBody=`<p style="margin:0">${d.qs.length} questions · <b>${d.due}</b> due for revision · <b>${d.fresh}</b> new from your studied chapters${doneToday?' · <span class="muted">today\'s quiz done — this is an extra round</span>':''}</p>
+    <div class="row"><button class="primary" id="daily" ${d.qs.length?'':'disabled'}>${doneToday?'Start another round':'Start today\'s quiz'}</button>${mis?`<button id="mis">Review ${mis} mistake${mis>1?'s':''}</button>`:''}</div>`;
+  }
+  let ledger='';
+  MODS.forEach(([m,title])=>{
+    const chs=Object.keys(CH).filter(c=>c[0]===m && BANK.some(q=>q.ch===c)); if(!chs.length) return;
+    ledger+=`<div class="mod">${esc(title)}</div>`;
+    chs.forEach(c=>{const s=chStats(c); const pct=x=>s.n?(100*x/s.n):0; const st=S.studied.includes(c);
+      ledger+=`<div class="ch"><span class="code">${c}</span><div class="name"><div>${esc(CH[c])}</div>
+      <div class="bar" title="${s.solid} solid, ${s.learn} learning, ${s.weak} to fix, of ${s.n}"><i class="s" style="width:${pct(s.solid)}%"></i><i class="l" style="width:${pct(s.learn)}%"></i><i class="w" style="width:${pct(s.weak)}%"></i></div>
+      <div class="note">${s.seen}/${s.n} attempted${s.weak?` · <span style="color:var(--bad)">${s.weak} to fix</span>`:''}</div></div>
+      <div class="act"><button data-notes="${c}">Notes</button><button data-topic="${c}">Practise</button><button class="studied" data-st="${c}" aria-pressed="${st}" title="Include in daily quiz">${st?'✓ Studied':'Mark studied'}</button></div></div>`});
+  });
+  app.innerHTML=hdr+`
+  <section class="card today"><div class="eyebrow">Today · ${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'short'})}</div><h2>Daily quiz</h2>${todayBody}</section>
+  ${mockCardHtml()}
+  <section class="stats">
+    <div class="stat"><b>${streak()}</b><span>day streak</span></div>
+    <div class="stat"><b>${seen}</b><span>of ${BANK.length} tried</span></div>
+    <div class="stat"><b>${acc}</b><span>accuracy</span></div>
+    <div class="stat"><b>${dueList().length}</b><span>due now</span></div>
+  </section>
+  ${analysisHtml()}
+  ${backupHtml()}
+  <section class="card"><div class="row" style="justify-content:space-between"><h2>Chapters</h2><span class="note">Read notes → practise ${TOPIC} questions → mark studied</span></div>
+  <div class="note">Bar: <span style="color:var(--good)">■</span> solid (right 3+ times in a row) · <span style="color:var(--gold)">■</span> learning · <span style="color:var(--bad)">■</span> got wrong last time</div>
+  <div class="ledger">${ledger}</div></section>
+  ${recentHtml()}
+  <p class="note" id="sync">${esc(syncMsg)}</p>`;
+  app.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{const c=b.dataset.st; const i=S.studied.indexOf(c); if(i<0) S.studied.push(c); else S.studied.splice(i,1); save(); render()});
+  app.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>start('topic',buildTopic(b.dataset.topic),b.dataset.topic));
+  app.querySelectorAll('[data-notes]').forEach(b=>b.onclick=()=>notesView(b.dataset.notes));
+  on2('bk',doBackup); on2('rs',()=>$('#rsf').click()); {const f=$('#rsf'); if(f) f.onchange=()=>{if(f.files[0]) doRestore(f.files[0])}}
+  on2('mock',()=>mockStart()); on2('mockresume',()=>mockView());
+  const on=on2;
+  on('daily',()=>start('daily',buildDaily().qs));
+  on('mis',()=>start('mistakes',shuffle(mistakes()).slice(0,15).map(q=>q.id)));
+  on('resume',()=>{Q=S.current; quiz()});
+  on('drop',()=>{S.current=null; save(); render()});
+}
+function recentHtml(){
+  const s=S.sessions.slice(-5).reverse(); if(!s.length) return '';
+  return `<section class="card"><h2>Recent rounds</h2><div class="list">${s.map(x=>`<div class="wrongitem"><span class="mono">${x.t.slice(5)}</span><span>${x.m==='topic'?'Topic '+esc(x.ch):x.m==='mistakes'?'Mistake review':x.m==='mock'?'Mock test':'Daily quiz'}</span><b class="mono" style="margin-left:auto">${x.c}/${x.n}</b></div>`).join('')}</div></section>`;
+}
+function on2(id,f){const e=$('#'+id); if(e) e.onclick=f}
+function start(mode,ids,ch){
+  if(!ids.length) return;
+  Q={m:mode,ch:ch||null,ids,i:0,res:[],t:today()}; S.current=Q; save(); quiz();
+}
+function quiz(){
+  view='quiz'; window.scrollTo(0,0);
+  const app=$('#app'); const hdr=app.querySelector('header').outerHTML;
+  if(Q.i>=Q.ids.length) return finish();
+  const q=BYID[Q.ids[Q.i]]; if(!q){Q.i++; return quiz()}
+  const c=card(q.id);
+  const label=Q.m==='topic'?'Topic '+Q.ch:Q.m==='mistakes'?'Mistake review':'Daily quiz';
+  app.innerHTML=hdr+`<section class="card">
+  <div class="qtop"><span class="eyebrow">${esc(label)} · ${Q.i+1} of ${Q.ids.length}</span><button class="ghost small" id="quit">Save &amp; exit</button></div>
+  <div class="prog"><i style="width:${100*Q.i/Q.ids.length}%"></i></div>
+  <div class="row"><span class="tag">${esc(q.ch)} · ${esc(CH[q.ch]||'')}</span>${c?`<span class="tag">${c.lw?'revision · got wrong before':'revision'}</span>`:'<span class="tag">new</span>'}</div>
+  <div class="stem">${esc(q.s)}</div>
+  <div class="opts">${q.o.map((o,i)=>`<button class="opt" data-i="${i}" id="opt${i}"><span class="l">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
+  <div id="after"></div></section>`;
+  $('#quit').onclick=()=>{S.current=Q; save(); render()};
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(q,+b.dataset.i));
+}
+function answer(q,i){
+  const ok=i===q.a;
+  document.querySelectorAll('.opt').forEach(b=>{b.disabled=true; const k=+b.dataset.i; if(k===q.a) b.classList.add('right'); else if(k===i) b.classList.add('wrong')});
+  const r={id:q.id,pick:i,ok,g:false}; Q.res.push(r); Q.i++;
+  grade(q.id,ok,false); S.current=Q; save();
+  $('#after').innerHTML=`<div class="exp ${ok?'':'bad'}">
+    <div class="verdict ${ok?'ok':'no'}">${ok?'Correct':'Not quite — answer is '+'ABCD'[q.a]}</div>
+    <p><b>Why:</b> ${esc(q.w)}</p>${q.n?`<p><b>Why the others are wrong:</b> ${esc(q.n)}</p>`:''}${q.r?`<p class="rem">Remember: ${esc(q.r)}</p>`:''}
+    <p class="note">${esc(q.id)} · ${esc(q.src||'Practice')} — original practice question</p></div>
+    ${ok?`<label class="guess"><input type="checkbox" id="g"> I guessed this one — bring it back tomorrow</label>`:''}
+    <div class="row"><button class="primary" id="next">${Q.i<Q.ids.length?'Next question':'See results'}</button></div>`;
+  const g=$('#g'); if(g) g.onchange=()=>{r.g=g.checked; const c=S.cards[q.id]; if(g.checked){c.b=0;c.lw=true;c.d=addDays(today(),1)} else {c.lw=false;c.b=Math.max(1,c.b);c.d=addDays(today(),INTERVALS[c.b])} save()};
+  $('#next').onclick=quiz; $('#next').focus({preventScroll:true});
+}
+function finish(){
+  const app=$('#app'); const hdr=app.querySelector('header').outerHTML;
+  const n=Q.res.length, c=Q.res.filter(r=>r.ok&&!r.g).length;
+  S.sessions.push({t:Q.t,m:Q.m,ch:Q.ch,n,c,wrong:Q.res.filter(r=>!r.ok||r.g).map(r=>r.id)});
+  if(S.sessions.length>300) S.sessions=S.sessions.slice(-300);
+  S.current=null; save();
+  const byCh={}; Q.res.forEach(r=>{const ch=BYID[r.id].ch; byCh[ch]=byCh[ch]||[0,0]; byCh[ch][1]++; if(r.ok&&!r.g) byCh[ch][0]++});
+  const wrong=Q.res.filter(r=>!r.ok||r.g);
+  const pct=n?Math.round(100*c/n):0;
+  app.innerHTML=hdr+`<section class="card today"><div class="eyebrow">Round complete</div>
+  <div class="row" style="align-items:baseline"><span class="result-big mono">${c}/${n}</span><span class="muted">${pct}% · target 70%+</span></div>
+  <p style="margin:0">${pct>=70?'On target. Wrong and guessed questions come back tomorrow.':'Below target. Re-read the notes for the chapters below, then the wrong ones come back tomorrow.'}</p>
+  <div class="list">${Object.entries(byCh).map(([ch,[a,b]])=>`<div class="wrongitem"><span class="code mono">${ch}</span><span>${esc(CH[ch]||'')}</span><b class="mono" style="margin-left:auto;color:${a===b?'var(--good)':'var(--bad)'}">${a}/${b}</b></div>`).join('')}</div>
+  <div class="row"><button class="primary" id="home">Back to home</button>${wrong.length?`<button id="redo">Retry the ${wrong.length} wrong now</button>`:''}</div></section>
+  ${wrong.length?`<section class="card"><h2>To fix</h2><div class="list">${wrong.map(r=>{const q=BYID[r.id];return `<div><div class="note">${esc(q.id)} · ${r.ok?'guessed':'you chose '+'ABCD'[r.pick]+', answer '+'ABCD'[q.a]}</div><div class="small">${esc(q.s.split('\n')[0])}</div><div class="small rem">${esc(q.r||q.w)}</div></div>`}).join('')}</div></section>`:''}`;
+  $('#home').onclick=render;
+  const rd=$('#redo'); if(rd) rd.onclick=()=>start('mistakes',wrong.map(r=>r.id));
+}
+document.addEventListener('keydown',e=>{
+  if(view!=='quiz'&&view!=='mock') return;
+  const k=e.key.toUpperCase(); const i='ABCD'.indexOf(k);
+  if(i>=0&&k.length===1){const b=$('#opt'+i); if(b&&!b.disabled) b.click()}
+  if(e.key==='Enter'){const n=$('#next'); if(n) n.click()}
+});
+boot();
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+</script>
+</body></html>
