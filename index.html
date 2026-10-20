@@ -2,9 +2,9 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>RBWM Prep</title>
+<title>JAIIB Prep</title>
 <meta name="theme-color" content="#0d6b5f">
-<meta name="description" content="JAIIB RBWM notes, practice questions, daily revision quiz and mock tests.">
+<meta name="description" content="JAIIB IE & IFS and RBWM notes, practice questions, daily revision quiz and mock tests.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -126,22 +126,33 @@ label.guess{display:flex;gap:8px;align-items:center;font-size:.9rem;color:var(--
 </head><body>
 <div class="wrap" id="app">
   <header>
-    <div><div class="eyebrow">JAIIB Nov 2026</div><h1>RBWM Prep</h1></div>
+    <div><div class="eyebrow">JAIIB Nov 2026</div><h1 id="ttl">RBWM Prep</h1><div class="tabs" id="subj" style="margin-top:8px"></div></div>
     <div class="count" id="count"></div>
   </header>
   <div class="card"><p class="muted" style="margin:0">Loading your question bank…</p></div>
 </div>
 
 <script>
-const CH={
-A1:'Retail Banking: Introduction',A2:'Role within the Bank — Business Models',A3:'Retail vs Corporate Banking',A4:'Branch Profitability',
+const SUBJ={
+RBWM:{name:'RBWM Prep',bank:'bank.json',notes:'notes.json',ls:'jaiib-drill-v1',app:'rbwm-prep',file:'rbwm-progress',
+CH:{A1:'Retail Banking: Introduction',A2:'Role within the Bank — Business Models',A3:'Retail vs Corporate Banking',A4:'Branch Profitability',
 B1:'Customer Requirements',B2:'Product Development Process',B3:'Credit Scoring & Types of Risk',B4:'Retail Liability Products (Deposits)',B5:'Retail Asset Products',B6:'Credit & Debit Cards',B7:'Remittance Products / Payment Systems',B8:'Digitisation of Retail Products',B9:'Role of AI & Technology',B10:'Recovery of Retail Loans',B11:'Management Information Systems',B12:'Securitisation',
 C1:'Marketing: Introduction',C2:'Delivery Channels',C3:'Delivery Models',C4:'Customer Relationship Management',C5:'Service Standards — BCSBI, Ombudsman',C6:'Marketing Information Systems',
 D1:'Importance of Wealth Management',D2:'Investment Management & PMS',D3:'Tax Planning',D4:'Other Financial Services',
-E1:'Home Loan Appraisal & Mortgage',E2:'Tax Benefits of Home Loans',E3:'Mortgage Advice & EMI Maths',E4:'Valuation & Reverse Mortgage'};
-const MODS=[['A','Module A — Retail Banking'],['B','Module B — Retail Products & Recovery'],['C','Module C — Marketing & Support Services'],['D','Module D — Wealth Management'],['E','Home Loans — Additional Reading']];
-const EXAMS=[['RBWM exam','2026-11-28']];
-const MOCK_N=100, MOCK_MIN=120, MOCK_W={A:12,B:42,C:12,D:16,E:18};
+E1:'Home Loan Appraisal & Mortgage',E2:'Tax Benefits of Home Loans',E3:'Mortgage Advice & EMI Maths',E4:'Valuation & Reverse Mortgage'},
+MODS:[['A','Module A — Retail Banking'],['B','Module B — Retail Products & Recovery'],['C','Module C — Marketing & Support Services'],['D','Module D — Wealth Management'],['E','Home Loans — Additional Reading']],
+W:{A:12,B:42,C:12,D:16,E:18}},
+IEIFS:{name:'IE & IFS Prep',bank:'bank_ieifs.json',notes:'notes_ieifs.json',ls:'jaiib-ieifs-v1',app:'ieifs-prep',file:'ieifs-progress',
+CH:{A1:'Overview of Indian Economy',A2:'Sectors of the Economy',A3:'Economic Planning & NITI Aayog',A4:'PSL & MSME',A5:'Infrastructure',A6:'Globalisation & Protectionism',A7:'Economic Reforms 1991',A8:'FDI/FII, Trade Policy, Growth vs Development',A9:'International Organisations (IMF, WB, WTO)',A10:'CSR, SDGs, Climate & ESG',
+B1:'Economics Fundamentals & Economy Types',B2:'Demand & Supply',B3:'Money Supply & Inflation',B4:'Interest Theories & IS-LM',B5:'Business Cycle',B6:'Monetary Policy & RBI Tools',B7:'National Income / GDP',B8:'Fiscal Policy & Budget',
+C1:'IFS Overview & Banking History',C2:'Banking Structure (RRB/UCB/PB/SFB)',C3:'RBI Act & BR Act',C4:'Development Financial Institutions',C5:'Microfinance & SHGs',C6:'NBFCs',C7:'Insurance Sector & IRDAI',C8:'Financial Regulators',C9:'NaBFID & Bad Bank (NARCL)',C10:'Banking Reforms & Committees',
+D1:'Money Market',D2:'Capital Market',D3:'Government Securities',D4:'Forex Market, FEMA & Benchmarks',D5:'Merchant Banking',D6:'Derivatives',D7:'Factoring, Forfaiting & TReDS',D8:'Venture Capital',D9:'Leasing & Hire Purchase',D10:'Credit Rating & CICs',D11:'Mutual Funds',D12:'Insurance Products & Govt Schemes',D13:'Pension & Small Savings',D14:'Financial Markets — Features',D15:'REITs & InvITs'},
+MODS:[['A','Module A — Indian Economic Architecture'],['B','Module B — Economic Concepts, Monetary & Fiscal'],['C','Module C — Indian Financial Architecture'],['D','Module D — Financial Products & Services']],
+W:{A:23,B:22,C:21,D:34}}};
+const EXAMS=[['IE & IFS','2026-11-01'],['AFM / RBWM','2026-11-28']];
+let SUB='IEIFS'; try{const x=localStorage.getItem('jaiib-subject'); if(x&&SUBJ[x]) SUB=x}catch(e){}
+let CH=SUBJ[SUB].CH, MODS=SUBJ[SUB].MODS, MOCK_W=SUBJ[SUB].W;
+const MOCK_N=100, MOCK_MIN=120;
 const INTERVALS=[1,3,7,14,30];
 const DAILY=15, MAXDUE=10, TOPIC=10;
 
@@ -155,7 +166,7 @@ function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor
 function blank(){return {studied:[],cards:{},sessions:[],current:null,v:1}}
 
 // ---------- storage ----------
-const LS='jaiib-drill-v1';
+let LS=SUBJ[SUB].ls;
 function lsGet(){try{return JSON.parse(localStorage.getItem(LS)||'null')}catch(e){return null}}
 function lsSet(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
 let dirty=false, writing=false, uid=null, USER=null, PARTNERS=[];
@@ -164,8 +175,9 @@ let syncMsg='';
 function setSync(m){syncMsg=m; const el=$('#sync'); if(el) el.textContent=m}
 
 async function boot(){
-  renderCount();
-  try{const r=await fetch('bank.json',{cache:'no-cache'}); BANK=await r.json()}catch(e){try{const r=await fetch('bank.json'); BANK=await r.json()}catch(e2){$('#app').innerHTML+='<div class="card">Could not load the questions. Connect to the internet once and reopen the app.</div>';return}}
+  renderSubj(); renderCount();
+  const BF=SUBJ[SUB].bank; BANK=[]; BYID={};
+  try{const r=await fetch(BF,{cache:'no-cache'}); BANK=await r.json()}catch(e){try{const r=await fetch(BF); BANK=await r.json()}catch(e2){$('#app').innerHTML+='<div class="card">Could not load the questions. Connect to the internet once and reopen the app.</div>';return}}
   BANK.forEach(q=>BYID[q.id]=q);
   S=Object.assign(blank(),lsGet()||{});
   try{if(navigator.storage&&navigator.storage.persist) navigator.storage.persist()}catch(e){}
@@ -221,7 +233,7 @@ let NOTES=null;
 async function notesView(ch){
   view='notes'; window.scrollTo(0,0);
   const app=$('#app'); const hdr=app.querySelector('header').outerHTML;
-  if(!NOTES){app.innerHTML=hdr+'<div class="card">Loading notes…</div>'; try{NOTES=await (await fetch('notes.json')).json()}catch(e){app.innerHTML=hdr+'<div class="card">Could not load the notes. Check your connection and try again. <button id="home">Back</button></div>'; on2('home',render); return}}
+  if(!NOTES){app.innerHTML=hdr+'<div class="card">Loading notes…</div>'; try{NOTES=await (await fetch(SUBJ[SUB].notes)).json()}catch(e){app.innerHTML=hdr+'<div class="card">Could not load the notes. Check your connection and try again. <button id="home">Back</button></div>'; on2('home',render); return}}
   const keys=Object.keys(CH); const i=keys.indexOf(ch); const prev=keys[i-1], next=keys[i+1];
   const st=S.studied.includes(ch); const s=chStats(ch);
   const html=(NOTES[ch]||'<p>No notes for this chapter.</p>').replace(/<table/g,'<div class="tw"><table').replace(/<\/table>/g,'</table></div>');
@@ -302,6 +314,16 @@ function mockSubmit(timeUp){
 }
 
 // ---------- views ----------
+function renderSubj(){
+  const t=$('#ttl'); if(t) t.textContent=SUBJ[SUB].name; document.title=SUBJ[SUB].name;
+  const el=$('#subj'); if(el){el.innerHTML=Object.keys(SUBJ).map(k=>`<button data-sub="${k}" aria-pressed="${k===SUB}">${k==='IEIFS'?'IE &amp; IFS':'RBWM'}</button>`).join('');}
+}
+function switchSubj(k){
+  if(k===SUB||!SUBJ[k]) return; if(view==='mock'){clearInterval(mockTimer)}
+  save(); SUB=k; try{localStorage.setItem('jaiib-subject',k)}catch(e){}
+  CH=SUBJ[k].CH; MODS=SUBJ[k].MODS; MOCK_W=SUBJ[k].W; LS=SUBJ[k].ls; NOTES=null; view='home';
+  $('#app').innerHTML=$('#app').querySelector('header').outerHTML+'<div class="card"><p class="muted" style="margin:0">Loading…</p></div>'; boot();
+}
 function renderCount(){
   $('#count').innerHTML=EXAMS.map(([n,d])=>{const k=daysTo(d);return `<span class="cd">${esc(n)} <b>${k>0?k+' days':'today'}</b></span>`}).join('');
 }
@@ -335,13 +357,13 @@ function backupHtml(){
 }
 function doBackup(){
   S.lastBackup=Date.now(); save();
-  const blob=new Blob([JSON.stringify({app:'rbwm-prep',v:1,saved:new Date().toISOString(),state:S})],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='rbwm-progress-'+today()+'.json'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove()},1000);
+  const blob=new Blob([JSON.stringify({app:SUBJ[SUB].app,v:1,saved:new Date().toISOString(),state:S})],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=SUBJ[SUB].file+'-'+today()+'.json'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove()},1000);
   render();
 }
 function doRestore(file){
   const fr=new FileReader();
-  fr.onload=()=>{try{const d=JSON.parse(fr.result); if(!d||d.app!=='rbwm-prep'||!d.state||typeof d.state.cards!=='object') throw 0; S=Object.assign(blank(),d.state); save(); render(); setTimeout(()=>{const m=$('#bkmsg'); if(m) m.textContent='Progress restored from backup of '+String(d.saved).slice(0,10)+'.'},50)}catch(e){const m=$('#bkmsg'); if(m) m.textContent='That file is not an RBWM Prep backup. Choose the file named rbwm-progress-….json.'}};
+  fr.onload=()=>{try{const d=JSON.parse(fr.result); if(!d||d.app!==SUBJ[SUB].app||!d.state||typeof d.state.cards!=='object') throw 0; S=Object.assign(blank(),d.state); save(); render(); setTimeout(()=>{const m=$('#bkmsg'); if(m) m.textContent='Progress restored from backup of '+String(d.saved).slice(0,10)+'.'},50)}catch(e){const m=$('#bkmsg'); if(m) m.textContent='That file is not a '+SUBJ[SUB].name+' backup. Choose the file named '+SUBJ[SUB].file+'-….json.'}};
   fr.readAsText(file);
 }
 function partnerHtml(){
@@ -445,7 +467,7 @@ function answer(q,i){
   $('#after').innerHTML=`<div class="exp ${ok?'':'bad'}">
     <div class="verdict ${ok?'ok':'no'}">${ok?'Correct':'Not quite — answer is '+'ABCD'[q.a]}</div>
     <p><b>Why:</b> ${esc(q.w)}</p>${q.n?`<p><b>Why the others are wrong:</b> ${esc(q.n)}</p>`:''}${q.r?`<p class="rem">Remember: ${esc(q.r)}</p>`:''}
-    <p class="note">${esc(q.id)} · ${esc(q.src||'Practice')} — original practice question</p></div>
+    ${q.note?`<p class="banner small" style="margin:0">⚠ ${esc(q.note)}</p>`:''}<p class="note">${esc(q.id)} · ${esc(q.src||'Practice')}${/^PYQ/.test(q.src||'')?' — memory-based recall, key checked against rules as on 30 Jun 2026':' — original practice question'}</p></div>
     ${ok?`<label class="guess"><input type="checkbox" id="g"> I guessed this one — bring it back tomorrow</label>`:''}
     <div class="row"><button class="primary" id="next">${Q.i<Q.ids.length?'Next question':'See results'}</button></div>`;
   const g=$('#g'); if(g) g.onchange=()=>{r.g=g.checked; const c=S.cards[q.id]; if(g.checked){c.b=0;c.lw=true;c.d=addDays(today(),1)} else {c.lw=false;c.b=Math.max(1,c.b);c.d=addDays(today(),INTERVALS[c.b])} save()};
@@ -469,6 +491,7 @@ function finish(){
   $('#home').onclick=render;
   const rd=$('#redo'); if(rd) rd.onclick=()=>start('mistakes',wrong.map(r=>r.id));
 }
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-sub]'); if(b) switchSubj(b.dataset.sub)});
 document.addEventListener('keydown',e=>{
   if(view!=='quiz'&&view!=='mock') return;
   const k=e.key.toUpperCase(); const i='ABCD'.indexOf(k);

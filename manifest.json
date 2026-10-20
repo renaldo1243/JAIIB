@@ -1,7 +1,7 @@
 {
-  "name": "RBWM Prep — JAIIB",
-  "short_name": "RBWM Prep",
-  "description": "JAIIB RBWM notes, practice questions, daily revision quiz and mock tests.",
+  "name": "JAIIB Prep — IE & IFS, RBWM",
+  "short_name": "JAIIB Prep",
+  "description": "JAIIB IE & IFS and RBWM notes, practice questions, daily revision quiz and mock tests.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
