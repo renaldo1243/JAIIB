@@ -218,6 +218,17 @@ function buildTopic(ch){
   const rest=shuffle(all.filter(q=>card(q.id)&&card(q.id).b>=3));
   return unseen.concat(weak,rest).slice(0,TOPIC).map(q=>q.id);
 }
+function buildNew(ch){
+  const all=BANK.filter(q=>/^IE-G-/.test(q.id)&&(!ch||q.ch===ch));
+  const unseen=all.filter(q=>!card(q.id)), weak=shuffle(all.filter(q=>card(q.id)&&card(q.id).b<3));
+  const pick=ch?shuffle(unseen):interleave(unseen.filter(q=>!S.studied.length||S.studied.includes(q.ch))).concat(shuffle(unseen));
+  return [...new Set(pick.concat(weak))].slice(0,ch?40:20).map(q=>q.id);
+}
+function newCardHtml(){
+  const all=BANK.filter(q=>/^IE-G-/.test(q.id)); if(!all.length) return '';
+  const left=all.filter(q=>!card(q.id)).length;
+  return `<section class="card"><div class="eyebrow">Beyond past papers</div><h2>New-angle questions</h2><p style="margin:0">${all.length} questions on facts that past papers have <b>not</b> asked yet — the likely new questions. <b>${left}</b> not tried yet.</p><div class="row"><button class="primary" id="newall">Practise 20 new-angle questions</button></div><p class="note">Also available chapter-wise: the “New angle” button next to each chapter.</p></section>`;
+}
 function mistakes(){return BANK.filter(q=>{const c=card(q.id);return c&&c.lw})}
 
 function grade(id,ok,guessed){
@@ -404,10 +415,11 @@ function render(){
       ledger+=`<div class="ch"><span class="code">${c}</span><div class="name"><div>${esc(CH[c])}</div>
       <div class="bar" title="${s.solid} solid, ${s.learn} learning, ${s.weak} to fix, of ${s.n}"><i class="s" style="width:${pct(s.solid)}%"></i><i class="l" style="width:${pct(s.learn)}%"></i><i class="w" style="width:${pct(s.weak)}%"></i></div>
       <div class="note">${s.seen}/${s.n} attempted${s.weak?` · <span style="color:var(--bad)">${s.weak} to fix</span>`:''}</div></div>
-      <div class="act"><button data-notes="${c}">Notes</button><button data-topic="${c}">Practise</button><button class="studied" data-st="${c}" aria-pressed="${st}" title="Include in daily quiz">${st?'✓ Studied':'Mark studied'}</button></div></div>`});
+      <div class="act"><button data-notes="${c}">Notes</button><button data-topic="${c}">Practise</button>${BANK.some(q=>q.ch===c&&/^IE-G-/.test(q.id))?`<button data-new="${c}">New angle</button>`:''}<button class="studied" data-st="${c}" aria-pressed="${st}" title="Include in daily quiz">${st?'✓ Studied':'Mark studied'}</button></div></div>`});
   });
   app.innerHTML=hdr+`
   <section class="card today"><div class="eyebrow">Today · ${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'short'})}</div><h2>Daily quiz</h2>${todayBody}</section>
+  ${newCardHtml()}
   ${mockCardHtml()}
   <section class="stats">
     <div class="stat"><b>${streak()}</b><span>day streak</span></div>
@@ -424,6 +436,8 @@ function render(){
   <p class="note" id="sync">${esc(syncMsg)}</p>`;
   app.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{const c=b.dataset.st; const i=S.studied.indexOf(c); if(i<0) S.studied.push(c); else S.studied.splice(i,1); save(); render()});
   app.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>start('topic',buildTopic(b.dataset.topic),b.dataset.topic));
+  app.querySelectorAll('[data-new]').forEach(b=>b.onclick=()=>start('new',buildNew(b.dataset.new),b.dataset.new));
+  on2('newall',()=>start('new',buildNew(null)));
   app.querySelectorAll('[data-notes]').forEach(b=>b.onclick=()=>notesView(b.dataset.notes));
   on2('bk',doBackup); on2('rs',()=>$('#rsf').click()); {const f=$('#rsf'); if(f) f.onchange=()=>{if(f.files[0]) doRestore(f.files[0])}}
   on2('mock',()=>mockStart()); on2('mockresume',()=>mockView());
@@ -435,7 +449,7 @@ function render(){
 }
 function recentHtml(){
   const s=S.sessions.slice(-5).reverse(); if(!s.length) return '';
-  return `<section class="card"><h2>Recent rounds</h2><div class="list">${s.map(x=>`<div class="wrongitem"><span class="mono">${x.t.slice(5)}</span><span>${x.m==='topic'?'Topic '+esc(x.ch):x.m==='mistakes'?'Mistake review':x.m==='mock'?'Mock test':'Daily quiz'}</span><b class="mono" style="margin-left:auto">${x.c}/${x.n}</b></div>`).join('')}</div></section>`;
+  return `<section class="card"><h2>Recent rounds</h2><div class="list">${s.map(x=>`<div class="wrongitem"><span class="mono">${x.t.slice(5)}</span><span>${x.m==='topic'?'Topic '+esc(x.ch):x.m==='new'?'New angle'+(x.ch?' '+esc(x.ch):''):x.m==='mistakes'?'Mistake review':x.m==='mock'?'Mock test':'Daily quiz'}</span><b class="mono" style="margin-left:auto">${x.c}/${x.n}</b></div>`).join('')}</div></section>`;
 }
 function on2(id,f){const e=$('#'+id); if(e) e.onclick=f}
 function start(mode,ids,ch){
@@ -448,7 +462,7 @@ function quiz(){
   if(Q.i>=Q.ids.length) return finish();
   const q=BYID[Q.ids[Q.i]]; if(!q){Q.i++; return quiz()}
   const c=card(q.id);
-  const label=Q.m==='topic'?'Topic '+Q.ch:Q.m==='mistakes'?'Mistake review':'Daily quiz';
+  const label=Q.m==='topic'?'Topic '+Q.ch:Q.m==='new'?'New angle'+(Q.ch?' '+Q.ch:''):Q.m==='mistakes'?'Mistake review':'Daily quiz';
   app.innerHTML=hdr+`<section class="card">
   <div class="qtop"><span class="eyebrow">${esc(label)} · ${Q.i+1} of ${Q.ids.length}</span><button class="ghost small" id="quit">Save &amp; exit</button></div>
   <div class="prog"><i style="width:${100*Q.i/Q.ids.length}%"></i></div>
