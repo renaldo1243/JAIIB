@@ -122,6 +122,8 @@ label.guess{display:flex;gap:8px;align-items:center;font-size:.9rem;color:var(--
 @media (max-width:540px){.ch{grid-template-columns:auto 1fr}.ch .act{grid-column:2}}
 @media (max-width:440px){.stats{grid-template-columns:repeat(2,1fr)} h1{font-size:1.4rem}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.pyq{display:inline-block;margin:8px 0 2px;padding:3px 9px;border-radius:6px;font-size:.8rem;font-weight:700;background:#fff3cd;color:#7a4b00;border:1px solid #f0c36d}
+.srcl{margin:8px 0 2px;font-size:.78rem;color:var(--muted,#667)}
 </style>
 </head><body>
 <div class="wrap" id="app">
@@ -216,13 +218,13 @@ function buildTopic(ch){
   const unseen=shuffle(all.filter(q=>!card(q.id)));
   const weak=shuffle(all.filter(q=>card(q.id)&&card(q.id).b<3));
   const rest=shuffle(all.filter(q=>card(q.id)&&card(q.id).b>=3));
-  return unseen.concat(weak,rest).slice(0,TOPIC).map(q=>q.id);
+  return unseen.concat(weak,rest).map(q=>q.id); // whole chapter in one round
 }
 function buildNew(ch){
   const all=BANK.filter(q=>/^IE-G-/.test(q.id)&&(!ch||q.ch===ch));
   const unseen=all.filter(q=>!card(q.id)), weak=shuffle(all.filter(q=>card(q.id)&&card(q.id).b<3));
   const pick=ch?shuffle(unseen):interleave(unseen.filter(q=>!S.studied.length||S.studied.includes(q.ch))).concat(shuffle(unseen));
-  return [...new Set(pick.concat(weak))].slice(0,ch?40:20).map(q=>q.id);
+  return ch?[...new Set(pick.concat(weak,shuffle(all)))].map(q=>q.id):[...new Set(pick.concat(weak))].slice(0,20).map(q=>q.id);
 }
 function newCardHtml(){
   const all=BANK.filter(q=>/^IE-G-/.test(q.id)); if(!all.length) return '';
@@ -283,6 +285,7 @@ function mockView(){
   app.innerHTML=hdr+`<section class="card">
   <div class="qtop"><span class="eyebrow">Mock · Q${m.i+1} of ${m.ids.length}</span><span class="timer" id="tm">${fmtLeft(m.end-Date.now())}</span></div>
   <div class="row"><span class="tag">${esc(q.ch)}</span><label class="guess" style="margin-left:auto"><input type="checkbox" id="fl" ${m.flag[q.id]?'checked':''}> Mark for review</label></div>
+  ${srcTag(q)}
   <div class="stem">${esc(q.s)}</div>
   <div class="opts">${q.o.map((o,i)=>`<button class="opt ${m.ans[q.id]===i?'sel':''}" data-i="${i}" id="opt${i}"><span class="l">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
   <div class="navrow"><button id="mp" ${m.i?'':'disabled'}>← Previous</button>${m.ans[q.id]!==undefined?'<button class="ghost" id="clr">Clear answer</button>':''}<button class="primary" id="mn">${m.i<m.ids.length-1?'Next →':'Review'}</button></div>
@@ -415,7 +418,7 @@ function render(){
       ledger+=`<div class="ch"><span class="code">${c}</span><div class="name"><div>${esc(CH[c])}</div>
       <div class="bar" title="${s.solid} solid, ${s.learn} learning, ${s.weak} to fix, of ${s.n}"><i class="s" style="width:${pct(s.solid)}%"></i><i class="l" style="width:${pct(s.learn)}%"></i><i class="w" style="width:${pct(s.weak)}%"></i></div>
       <div class="note">${s.seen}/${s.n} attempted${s.weak?` · <span style="color:var(--bad)">${s.weak} to fix</span>`:''}</div></div>
-      <div class="act"><button data-notes="${c}">Notes</button><button data-topic="${c}">Practise</button>${BANK.some(q=>q.ch===c&&/^IE-G-/.test(q.id))?`<button data-new="${c}">New angle</button>`:''}<button class="studied" data-st="${c}" aria-pressed="${st}" title="Include in daily quiz">${st?'✓ Studied':'Mark studied'}</button></div></div>`});
+      <div class="act"><button data-notes="${c}">Notes</button><button data-topic="${c}">Practise all ${s.n}</button>${BANK.some(q=>q.ch===c&&/^IE-G-/.test(q.id))?`<button data-new="${c}">New angle ${BANK.filter(q=>q.ch===c&&/^IE-G-/.test(q.id)).length}</button>`:''}<button class="studied" data-st="${c}" aria-pressed="${st}" title="Include in daily quiz">${st?'✓ Studied':'Mark studied'}</button></div></div>`});
   });
   app.innerHTML=hdr+`
   <section class="card today"><div class="eyebrow">Today · ${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'short'})}</div><h2>Daily quiz</h2>${todayBody}</section>
@@ -429,7 +432,7 @@ function render(){
   </section>
   ${analysisHtml()}
   ${backupHtml()}
-  <section class="card"><div class="row" style="justify-content:space-between"><h2>Chapters</h2><span class="note">Read notes → practise ${TOPIC} questions → mark studied</span></div>
+  <section class="card"><div class="row" style="justify-content:space-between"><h2>Chapters</h2><span class="note">Read notes → practise all the chapter's questions in one go → mark studied</span></div>
   <div class="note">Bar: <span style="color:var(--good)">■</span> solid (right 3+ times in a row) · <span style="color:var(--gold)">■</span> learning · <span style="color:var(--bad)">■</span> got wrong last time</div>
   <div class="ledger">${ledger}</div></section>
   ${recentHtml()}
@@ -456,6 +459,12 @@ function start(mode,ids,ch){
   if(!ids.length) return;
   Q={m:mode,ch:ch||null,ids,i:0,res:[],t:today()}; S.current=Q; save(); quiz();
 }
+function srcTag(q){
+  const s=q.src||'';
+  if(/^PYQ/.test(s)){const when=s.replace(/^PYQ\s*·\s*/,'').replace(/\(.*?\)/g,'').trim();return `<div class="pyq">★ Previous-year question · asked in ${esc(when)}</div>`}
+  if(/^New angle/.test(s)) return `<div class="srcl">New angle · not asked in past papers yet</div>`;
+  return `<div class="srcl">${esc(s.split('·')[0].trim()||'Practice')} · original practice question</div>`;
+}
 function quiz(){
   view='quiz'; window.scrollTo(0,0);
   const app=$('#app'); const hdr=app.querySelector('header').outerHTML;
@@ -467,6 +476,7 @@ function quiz(){
   <div class="qtop"><span class="eyebrow">${esc(label)} · ${Q.i+1} of ${Q.ids.length}</span><button class="ghost small" id="quit">Save &amp; exit</button></div>
   <div class="prog"><i style="width:${100*Q.i/Q.ids.length}%"></i></div>
   <div class="row"><span class="tag">${esc(q.ch)} · ${esc(CH[q.ch]||'')}</span>${c?`<span class="tag">${c.lw?'revision · got wrong before':'revision'}</span>`:'<span class="tag">new</span>'}</div>
+  ${srcTag(q)}
   <div class="stem">${esc(q.s)}</div>
   <div class="opts">${q.o.map((o,i)=>`<button class="opt" data-i="${i}" id="opt${i}"><span class="l">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
   <div id="after"></div></section>`;
