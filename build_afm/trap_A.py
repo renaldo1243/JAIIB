@@ -8,7 +8,7 @@ T('A1', """After the balance sheet date but before approval of accounts, a fire 
   "Trap: 'not yet approved' does not make every event adjusting. A fire is a new condition arising after the balance sheet date: non-adjusting under AS 4, disclosed if material.")
 
 T('A1', """A company received a government grant of ₹10 lakh in cash this year towards a machine with a 10-year life. The accountant credits the full ₹10 lakh to P&L because "cash was received this year". Under AS 12 the grant should be:""",
-  "Deducted from the machine's cost or released as income over its 10-year life",
+  "Reduced from cost or released over the machine's life",
   ["Credited fully to P&L this year because cash was received", "Credited to Share Capital as owners' funds",
    "Kept outside the books until the machine is sold"],
   "Trap: receipt of cash ≠ income. AS 12 matches a grant on a depreciable asset with the depreciation, either by reducing cost or as deferred income.")
@@ -20,7 +20,7 @@ T('A1', """Which of the following is TRUE under AS 26?""",
   "Trap: 'it adds value, so capitalise'. AS 26 bans internally generated brands, mastheads and customer lists, and always expenses advertising, training and research.")
 
 T('A1', """A related-party question: two companies, X Ltd and Y Ltd, have one director in common and no other link. X sells goods to Y. Under AS 18:""",
-  "No related-party disclosure is required merely because of a common director",
+  "No disclosure: a common director alone isn't a link",
   ["Disclosure is required because they share a director", "Disclosure is required only if the sale was at a loss",
    "Disclosure is required only if payment was in cash"],
   "Trap: common director = related. AS 18 expressly excludes two companies related only through a common director.")
@@ -68,12 +68,12 @@ T('A2', """Profit for the year is ₹4 lakh; drawings ₹1 lakh; fresh capital �
   "Closing = Opening + Fresh + Profit − Drawings → 15 = O + 2 + 4 − 1 → O = ₹10 lakh. Trap: adding drawings instead of subtracting gives ₹8 lakh.")
 
 T('A2', """Income received in advance is recorded as a liability mainly because of:""",
-  "The accrual (and matching) concept: it is not yet earned", ["The conservatism convention only", "The cost concept",
+  "The accrual concept: it is not yet earned", ["The conservatism convention only", "The cost concept",
    "The going concern concept only"],
   "Trap: 'conservatism'. Income is recognised when earned; cash received early is a liability until the service is rendered.")
 
 T('A2', """Which statement is correct?""",
-  "Consistency allows a change in method if a better presentation results, with disclosure",
+  "Consistency permits a justified change, with disclosure",
   ["Consistency means a method can never be changed once adopted", "Materiality means every item must be shown separately",
    "Conservatism requires creating secret reserves wherever possible"],
   "Trap words: 'never', 'every', 'wherever possible'. Consistency permits justified change with disclosure; materiality allows insignificant items to be grouped; conservatism does not allow secret reserves.")
@@ -88,7 +88,7 @@ T('A3', """Discount Allowed is a:""",
   "Trap: 'personal' because it relates to a debtor. Discount allowed is a loss/expense, so it is nominal.")
 
 T('A3', """Goodwill purchased is classified as:""",
-  "Intangible real account", ["Nominal account", "Personal account", "Fictitious asset"],
+  "Intangible real account", ["Nominal account", "Artificial personal account", "Fictitious asset"],
   "Trap: 'nominal' because it is not physical. Goodwill is a (intangible) real account.")
 
 T('A3', """Salary outstanding is classified as:""",
@@ -106,7 +106,7 @@ T('A3', """Goods worth ₹5,000 (cost) are distributed as free samples. The entr
   "Trap: crediting Sales. Samples are not sold; their cost is removed from purchases and treated as advertisement expense.")
 
 T('A3', """Cash ₹50,000 withdrawn from bank for office use. In a double-column cash book this is:""",
-  "A contra entry, recorded in both cash and bank columns", ["Recorded only in the cash column",
+  "A contra entry in both columns", ["Recorded only in the cash column",
    "Recorded only in the journal proper", "Recorded in the petty cash book"],
   "Trap: one-column thinking. Both cash and bank are affected, so it is a contra entry marked 'C'.")
 
@@ -128,7 +128,7 @@ T('A4', """For the same errors [(a) purchases book undercast ₹3,000; (b) Ram/S
   "Only (a) touches a nominal account (purchases up by 3,000 → profit down 3,000). (b) and (c) affect personal accounts only. Trap: equating profit effect with the suspense balance.")
 
 T('A4', """A credit sale of ₹6,000 to Anil was entered in the Sales Book as ₹600. This error:""",
-  "Does not affect the Trial Balance; sales and Anil are both understated by ₹5,400",
+  "Leaves the TB agreeing; both sides understated ₹5,400",
   ["Affects the Trial Balance by ₹5,400", "Is an error of principle", "Is a compensating error"],
   "Trap: thinking every wrong amount disturbs the TB. A wrong amount in the book of original entry is posted wrongly to both sides.")
 
@@ -159,7 +159,7 @@ T('A4', """Which statement is correct?""",
   "Errors of omission, principle and compensating errors don't disturb TB totals.")
 
 T('A4', """An error discovered after closing the books: sale of an old machine ₹30,000 was credited to Sales last year. The correction this year is:""",
-  "Profit & Loss Adjustment A/c Dr; To Machinery A/c", ["Sales A/c Dr; To Machinery A/c", "Machinery A/c Dr; To Sales A/c",
+  "P&L Adjustment A/c Dr; To Machinery A/c", ["Sales A/c Dr; To Machinery A/c", "Machinery A/c Dr; To Sales A/c",
    "Suspense A/c Dr; To Machinery A/c"],
   "Trap: debiting Sales, which was already closed. Last year's sales were overstated (profit overstated), so the adjustment goes through P&L Adjustment; Machinery is still overstated, so it is credited.")
 
@@ -177,7 +177,7 @@ T('A5', """Pass book shows a credit balance of ₹30,000. Cheques issued not pre
   "From pass book: less unpresented cheques 5,000 (cash book already reduced) = 25,000; less direct deposit 2,000 = 23,000; add bank charges 300 = 23,300. Trap: using cash-book-start signs.")
 
 T('A5', """Which item requires NO entry in the cash book?""",
-  "A cheque issued to a supplier that is not yet presented", ["Bank charges debited by the bank",
+  "A cheque issued but not yet presented", ["Bank charges debited by the bank",
    "Interest credited by the bank", "A customer's cheque returned dishonoured"],
   "Only timing differences (unpresented / uncollected cheques) need no cash-book entry. Bank-originated items must be recorded.")
 
@@ -186,7 +186,7 @@ T('A5', """While preparing the BRS starting from a favourable cash-book balance,
   "The bank has already reduced the balance, so the pass book is lower: deduct.")
 
 T('A5', """The bank wrongly debited ₹4,000 belonging to another customer to our account. The correct action is:""",
-  "Show it in the BRS and ask the bank to reverse it; make no cash-book entry",
+  "Show it in the BRS only and ask the bank to reverse it",
   ["Record it in the cash book as a bank charge", "Record it in the cash book and claim later",
    "Write it off as a bad debt"],
   "A bank's error is not our transaction. Our cash book is correct; the item appears only in the BRS.")
@@ -201,7 +201,7 @@ T('A5', """Starting from the pass-book balance, 'cheques deposited but not yet c
   "The cash book already includes them, the pass book doesn't, so the cash book is higher: add.")
 
 T('A5', """In the cash book, a deposit of ₹56,000 was wrongly recorded as ₹65,000. Starting from the cash-book balance, this error is:""",
-  "Deducted by ₹9,000 (and the cash book corrected)", ["Added by ₹9,000", "Deducted by ₹65,000", "Ignored as a timing difference"],
+  "Deducted by ₹9,000, cash book corrected", ["Added by ₹9,000", "Deducted by ₹65,000", "Ignored as a timing difference"],
   "The cash book is overstated by 9,000. Deduct it in the BRS and correct the cash book; it is our error, not a timing difference.")
 
 T('A5', """Which pair is correctly matched?""",
@@ -274,7 +274,7 @@ T('A7', """Cost of training staff to operate a newly installed machine is:""",
   "AS 10 excludes training costs from the cost of PPE.")
 
 T('A7', """Replacement of a worn-out roof of a factory with a similar roof (no improvement) is generally:""",
-  "Revenue expenditure (repairs and maintenance)", ["Capital expenditure as it is large", "Capital loss",
+  "Revenue expenditure (repairs)", ["Capital expenditure as it is large", "Capital loss",
    "Deferred revenue expenditure"],
   "Size doesn't decide. Restoring the existing condition is maintenance; improving capacity or life would be capital. (Under the component approach a significant separately-identified component may be capitalised with derecognition of the old one.)")
 
@@ -306,12 +306,12 @@ T('A8', """Rebate allowed on a bill retired before maturity is, for the holder (
   "The holder accepts less than face value for early payment: loss for the holder, income for the acceptor.")
 
 T('A8', """When a drawer discounts a bill with the bank, the discount is:""",
-  "A finance cost debited to Discount A/c; sales are not affected", ["Deducted from Sales A/c", "Credited to Discount A/c as income",
+  "A finance cost; sales are not affected", ["Deducted from Sales A/c", "Credited to Discount A/c as income",
    "Added to the cost of goods sold"],
   "The sale was recorded when goods were sold; discounting is a financing act, so the discount is a finance cost.")
 
 T('A8', """Which statement about an accommodation bill is correct?""",
-  "It is drawn and accepted without consideration to help raise funds",
+  "It is accepted without consideration, to raise funds",
   ["It always arises from a genuine sale of goods", "It cannot be discounted with any bank", "It is void and unenforceable by anyone"],
   "No trade behind it; but a holder in due course for value can enforce it. Banks avoid it as it is not self-liquidating.")
 
@@ -339,7 +339,7 @@ T('A9', """The Long Form Audit Report is submitted by:""",
   "LFAR accompanies the statutory audit report.")
 
 T('A9', """Risk-Based Internal Audit means:""",
-  "Audit frequency and depth depend on the assessed risk of each unit", ["Every branch is audited every month",
+  "Audit effort depends on each unit's assessed risk", ["Every branch is audited every month",
    "Only loss-making branches are audited", "Audit is replaced by branch self-certification"],
   "RBIA concentrates audit effort on high-risk branches and activities.")
 

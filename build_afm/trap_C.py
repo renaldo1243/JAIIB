@@ -26,7 +26,7 @@ T('C2', """PAT ₹18 lakh; preference dividend ₹3 lakh; equity shareholders' f
   "ROE = (18 − 3)/100 = 15%. Trap: not deducting preference dividend (18%).")
 
 T('C2', """In computing DSCR, which is the correct numerator?""",
-  "PAT + depreciation + interest on term loan", ["PAT only", "EBIT − interest", "PAT + principal instalment"],
+  "PAT + depreciation + interest on term loan", ["PAT + depreciation only", "EBIT − interest on term loan", "PAT + principal instalment due"],
   "Cash available for debt service = profit after tax + non-cash depreciation + interest (added back because it is serviced from the same cash). Denominator = interest + instalment.")
 
 T('C2', """Which transaction leaves the debt-equity ratio UNCHANGED?""",
@@ -50,7 +50,7 @@ T('C2', """EPS is ₹8 and market price ₹96. Which is correct?""",
   "P/E = 96/8 = 12; earnings yield = 8/96 = 8.33% (= 1/P/E).")
 
 T('C2', """Proprietary ratio measures:""",
-  "Shareholders' funds as a proportion of total assets", ["Debt as a proportion of equity", "Current assets to current liabilities",
+  "Shareholders' funds to total assets", ["Debt as a proportion of equity", "Current assets to current liabilities",
    "Net profit to sales"],
   "Proprietary ratio = owners' funds ÷ total assets; the higher it is, the more assets are owner-financed.")
 
@@ -80,7 +80,7 @@ T('C3', """Using the Rule of 72, at 6% compound interest money doubles in about:
   "72/6 = 12 years. Trap: simple interest (100/6 = 16.7 years).")
 
 T('C3', """Which statement on EMIs (reducing balance) is correct?""",
-  "The interest portion falls and the principal portion rises with each instalment",
+  "Interest part falls and principal part rises each month",
   ["Interest and principal portions remain equal throughout", "The principal portion falls with each instalment",
    "Interest is charged on the original loan amount throughout"],
   "Interest is on the outstanding balance, which reduces every month. Trap: flat-rate thinking.")
@@ -95,7 +95,7 @@ T('C3', """In an ORDINARY annuity, payments occur:""",
   "Ordinary = end; annuity due = beginning.")
 
 T('C3', """A bank deducts interest upfront on a 1-year ₹2 lakh loan at 12%. The borrower's effective rate is:""",
-  "About 13.64%", ["12.00%", "10.71%", "24.00%"],
+  "13.64%", ["12.00%", "10.71%", "24.00%"],
   "Receives 1,76,000, repays 2,00,000: 24,000/1,76,000 = 13.64%. Front-end interest raises the effective cost.")
 
 T('C3', """Savings bank interest in India is calculated on:""",
@@ -175,7 +175,7 @@ T('C5', """If Indian interest rates are higher than US rates, by interest rate p
   "The higher-interest currency (INR) trades at a forward discount; the lower-interest currency (USD) at a premium.")
 
 T('C5', """An exporter hedged with a forward contract to sell USD at 83.00. On maturity spot is 82.40. Result:""",
-  "He sells at 83.00, protected from the fall in the rupee value of his dollars",
+  "He sells at 83.00, protected from the fall",
   ["He must sell at 82.40, the spot rate on maturity", "He gets 83.00 plus the 0.60 difference",
    "The contract lapses because spot moved against the bank"],
   "A forward fixes the rate for both sides; here the hedge saved him 60 paise per dollar.")
@@ -246,7 +246,7 @@ T('C7', """Which method ignores the time value of money?""",
   "Payback (and ARR) don't discount cash flows. Discounted payback does.")
 
 T('C7', """ARR is calculated using:""",
-  "Average accounting profit after depreciation", ["Discounted cash inflows", "Cash flows before depreciation",
+  "Average profit after depreciation", ["Discounted cash inflows", "Cash flows before depreciation",
    "The IRR of the project"],
   "ARR = average profit ÷ average (or initial) investment. Trap: using cash flows.")
 
@@ -256,7 +256,7 @@ T('C7', """A project's NPV at the firm's cost of capital is negative. Then:""",
   "NPV < 0 ⇔ IRR < k ⇔ PI < 1.")
 
 T('C7', """Which should be EXCLUDED from project cash flows?""",
-  "Interest on the loan used to finance the project", ["Depreciation tax shield", "Working capital released at the end",
+  "Interest on the project loan", ["Depreciation tax shield", "Working capital released at the end",
    "Salvage value of the plant"],
   "Financing costs are reflected in the discount rate; including interest would double-count.")
 
@@ -271,7 +271,7 @@ T('C7', """A project has cash flows −100, +250, −160. A problem with using I
   "Non-conventional cash flows (sign changes more than once) can produce multiple IRRs; NPV still works.")
 
 T('C7', """Under a Deferred Payment Guarantee, the bank guarantees:""",
-  "Payment of instalments of the purchase price to the machinery supplier",
+  "Instalments payable to the machinery supplier",
   ["Performance of a contract by the borrower", "Payment of customs duty on imports",
    "Repayment of a cash credit limit"],
   "DPG supports purchase of machinery on deferred credit; appraised like a term loan.")
@@ -286,7 +286,7 @@ T('C8', """In which lease does the lessor bear the risk of obsolescence?""",
   "Operating leases are short, cancellable, and the lessor keeps the risks and rewards.")
 
 T('C8', """A dry lease of an aircraft means:""",
-  "Only the aircraft is leased; the lessee provides crew, maintenance and insurance",
+  "Aircraft only; lessee arranges crew and upkeep",
   ["The aircraft is leased with crew, maintenance and insurance", "The aircraft is leased without fuel only",
    "The lessor buys the aircraft back at the end of the lease"],
   "Dry = aircraft only; wet = ACMI (aircraft, crew, maintenance, insurance).")
@@ -302,12 +302,12 @@ T('C8', """Three parties — lessor, lessee and a lender who finances most of th
   "The lessor 'leverages' its investment by borrowing from the lender.")
 
 T('C8', """Which is a feature of hire purchase but NOT of a lease?""",
-  "Ownership passes to the user on payment of the last instalment", ["The user gets possession immediately",
+  "Ownership passes on the last instalment", ["The user gets possession immediately",
    "Payments are made periodically", "The owner can repossess on default"],
   "In a lease ownership stays with the lessor; in hire purchase it passes to the hirer at the end.")
 
 T('C8', """Total lease rentals are ₹60 lakh against a cash price of ₹50 lakh. The correct conclusion is:""",
-  "Cannot decide until the rentals are discounted to present value", ["Buy, because ₹60 lakh exceeds ₹50 lakh",
+  "Cannot decide until rentals are discounted", ["Buy, because ₹60 lakh exceeds ₹50 lakh",
    "Lease, because payments are spread over time", "The two are equal over the asset's life"],
   "Lease-vs-buy compares present values, never undiscounted totals.")
 
@@ -368,17 +368,17 @@ T('C10', """A put option is 'in the money' when:""",
   "A put lets you sell at the strike; it has value when the market price is lower.")
 
 T('C10', """In a currency swap, unlike an interest rate swap:""",
-  "Principal amounts in two currencies are exchanged at the start and end", ["Only interest on a notional amount is exchanged",
+  "Principal in two currencies is exchanged", ["Only interest on a notional amount is exchanged",
    "No cash flows are exchanged", "The contract is always exchange-traded"],
   "IRS: notional never exchanged. Currency swap: principal exchanged.")
 
 T('C10', """A borrower worried about RISING rates on a future loan should:""",
-  "Buy an FRA (or pay fixed in an interest rate swap)", ["Sell an FRA", "Receive fixed in an interest rate swap",
+  "Buy an FRA", ["Sell an FRA", "Receive fixed in an interest rate swap",
    "Write a put option on bonds"],
   "Buying an FRA locks the borrowing rate; if rates rise, the FRA pays the difference.")
 
 T('C10', """Exchange-traded currency futures in India are regulated by:""",
-  "SEBI (with RBI framing the eligibility norms for currency derivatives)", ["Only RBI", "IRDAI", "FEDAI"],
+  "SEBI", ["Only RBI", "IRDAI", "FEDAI"],
   "ETDs are SEBI-regulated; OTC forex and interest-rate derivatives are under RBI.")
 
 T('C10', """Which is a feature of a FORWARD contract?""",
