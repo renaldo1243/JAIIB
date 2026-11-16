@@ -24,6 +24,15 @@ DROP_BASIC = set(os.environ.get('DROP','').split())
 bank = [q for q in qb.QS if q['ch'] in built and not (qb.is_basic(q) and q['ch'][0] in DROP_BASIC)]
 for q in bank:
     q['lv'] = 'basic' if qb.is_basic(q) else 'exam'
+from len_fix import FIX
+_byid={q['id']:q for q in bank}
+for qid,m in FIX.items():
+    q=_byid[qid]
+    for old,new in m.items():
+        if old==new: continue
+        assert old in q['o'], (qid, old)
+        q['o'][q['o'].index(old)] = new
+    assert len(set(q['o']))==4, qid
 ids = [q['id'] for q in bank]
 assert len(ids) == len(set(ids)), 'duplicate ids'
 for q in bank:
