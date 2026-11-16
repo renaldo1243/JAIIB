@@ -236,7 +236,7 @@ function buildNew(ch){
 function newCardHtml(){
   const all=BANK.filter(q=>/^(IE|RB|AF)-G-/.test(q.id)); if(!all.length) return '';
   const left=all.filter(q=>!card(q.id)).length;
-  return `<section class="card"><div class="eyebrow">${SUB==='AFM'?'Beat the examiner':'Beyond past papers'}</div><h2>${SUB==='AFM'?'Trap drill':'New-angle questions'}</h2><p style="margin:0">${all.length} ${SUB==='AFM'?'questions built on the traps examiners set — wrong options are the classic mistakes.':'questions on facts that past papers have <b>not</b> asked yet — the likely new questions.'} <b>${left}</b> not tried yet.</p><div class="row"><button class="primary" id="newall">${SUB==='AFM'?'Practise 20 trap questions':'Practise 20 new-angle questions'}</button></div><p class="note">Also available chapter-wise: the “New angle” button next to each chapter.</p></section>`;
+  return `<section class="card"><div class="eyebrow">${SUB==='AFM'?'Beat the examiner':'Beyond past papers'}</div><h2>${SUB==='AFM'?'Trap drill':'New-angle questions'}</h2><p style="margin:0">${all.length} ${SUB==='AFM'?'questions built on the traps examiners set — wrong options are the classic mistakes.':'questions on facts that past papers have <b>not</b> asked yet — the likely new questions.'} <b>${left}</b> not tried yet.</p><div class="row"><button class="primary" id="newall">${SUB==='AFM'?'Practise 20 trap questions':'Practise 20 new-angle questions'}</button></div><p class="note">Also available chapter-wise: the “${SUB==='AFM'?'Trap drill':'New angle'}” button next to each chapter.</p></section>`;
 }
 function mistakes(){return BANK.filter(q=>{const c=card(q.id);return c&&c.lw})}
 
