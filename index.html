@@ -150,9 +150,16 @@ B1:'Economics Fundamentals & Economy Types',B2:'Demand & Supply',B3:'Money Suppl
 C1:'IFS Overview & Banking History',C2:'Banking Structure (RRB/UCB/PB/SFB)',C3:'RBI Act & BR Act',C4:'Development Financial Institutions',C5:'Microfinance & SHGs',C6:'NBFCs',C7:'Insurance Sector & IRDAI',C8:'Financial Regulators',C9:'NaBFID & Bad Bank (NARCL)',C10:'Banking Reforms & Committees',
 D1:'Money Market',D2:'Capital Market',D3:'Government Securities',D4:'Forex Market, FEMA & Benchmarks',D5:'Merchant Banking',D6:'Derivatives',D7:'Factoring, Forfaiting & TReDS',D8:'Venture Capital',D9:'Leasing & Hire Purchase',D10:'Credit Rating & CICs',D11:'Mutual Funds',D12:'Insurance Products & Govt Schemes',D13:'Pension & Small Savings',D14:'Financial Markets — Features',D15:'REITs & InvITs',D16:'Para-Banking & Financial Services by Banks'},
 MODS:[['A','Module A — Indian Economic Architecture'],['B','Module B — Economic Concepts, Monetary & Fiscal'],['C','Module C — Indian Financial Architecture'],['D','Module D — Financial Products & Services']],
-W:{A:23,B:22,C:21,D:34}}};
-const EXAMS=[['IE & IFS','2026-11-01'],['AFM / RBWM','2026-11-28']];
-let SUB='IEIFS'; try{const x=localStorage.getItem('jaiib-subject'); if(x&&SUBJ[x]) SUB=x}catch(e){}
+W:{A:23,B:22,C:21,D:34}},
+AFM:{name:'AFM Prep',bank:'bank_afm.json',notes:'notes_afm.json',ls:'jaiib-afm-v1',app:'afm-prep',file:'afm-progress',
+CH:{A1:'Accounting Standards, Ind AS & Transfer Pricing',A2:'Accounting Concepts & Balance Sheet Equation',A3:'Golden Rules, Journal & Subsidiary Books',A4:'Trial Balance, Errors & Suspense',A5:'Bank Reconciliation Statement',A6:'Depreciation',A7:'Capital vs Revenue (AS 10)',A8:'Bills of Exchange',A9:'Bank Audit, Back Office & Reconciliation',
+B1:'Final Accounts from Trial Balance',B2:'Companies & Share Capital',B3:'Schedule III, Bonus/Rights/ESOP, EPS & Deferred Tax',B4:'Cash Flow Statement (AS 3)',B5:'Final Accounts of Banks',B6:'Computerised Accounting & CBS',
+C1:'Business Organisation, Agency & Dividend Decisions',C2:'Ratio Analysis',C3:'Interest, Annuities & EMI',C4:'Bonds: Valuation, YTM, Duration',C5:'Forex Arithmetic',C6:'Cost of Capital, CAPM & Capital Structure',C7:'Capital Budgeting',C8:'Leasing',C9:'Working Capital Management',C10:'Derivatives',
+D1:'Income Tax, TDS/TCS & Deductions',D2:'GST',D3:'Costing Methods',D4:'Marginal Costing & CVP',D5:'Standard Costing & Variances',D6:'Budgets & Budgetary Control'},
+MODS:[['A','Module A — Accounting Principles & Processes'],['B','Module B — Financial Statements & CBS'],['C','Module C — Financial Management'],['D','Module D — Taxation & Costing']],
+W:{A:28,B:24,C:29,D:19}}};
+const EXAMS=[['RBWM','2026-11-28'],['AFM','2026-11-29']];
+let SUB='AFM'; try{const x=localStorage.getItem('jaiib-subject'); if(x&&SUBJ[x]) SUB=x}catch(e){}
 let CH=SUBJ[SUB].CH, MODS=SUBJ[SUB].MODS, MOCK_W=SUBJ[SUB].W;
 const MOCK_N=100, MOCK_MIN=120;
 const INTERVALS=[1,3,7,14,30];
@@ -330,7 +337,7 @@ function mockSubmit(timeUp){
 // ---------- views ----------
 function renderSubj(){
   const t=$('#ttl'); if(t) t.textContent=SUBJ[SUB].name; document.title=SUBJ[SUB].name;
-  const el=$('#subj'); if(el){el.innerHTML=Object.keys(SUBJ).map(k=>`<button data-sub="${k}" aria-pressed="${k===SUB}">${k==='IEIFS'?'IE &amp; IFS':'RBWM'}</button>`).join('');}
+  const el=$('#subj'); if(el){el.innerHTML=Object.keys(SUBJ).map(k=>`<button data-sub="${k}" aria-pressed="${k===SUB}">${({IEIFS:'IE &amp; IFS',RBWM:'RBWM',AFM:'AFM'})[k]}</button>`).join('');}
 }
 function switchSubj(k){
   if(k===SUB||!SUBJ[k]) return; if(view==='mock'){clearInterval(mockTimer)}
