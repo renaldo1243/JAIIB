@@ -60,3 +60,13 @@ def money(x, d=0):
 def T(ch, stem, correct, wrongs, expl, fixed=False):
     """Trap-drill question: wrong options are the classic exam traps."""
     return Q(ch, stem, correct, wrongs, expl, fixed=fixed, src='Trap drill · exam trap (original)', pre='AF-G')
+
+
+def S(ch, stem, correct, wrongs, expl, fixed=False):
+    """May-2026-style case question."""
+    return Q(ch, stem, correct, wrongs, expl, fixed=fixed, src='Practice · May 2026 exam style (original)', pre='AF-H')
+
+
+def is_basic(q):
+    s = q['s']
+    return (not q['id'].startswith('AF-May26')) and (not q['id'].startswith('AF-H')) and len(s) < 170 and '\n' not in s

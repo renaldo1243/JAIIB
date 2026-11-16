@@ -14,13 +14,16 @@ for c in CHAPTERS:
         importlib.import_module(f'ch_{c}')
         built.append(c)
 import pyq_may26  # adds PYQs
-for tf in ['trap_A','trap_B','trap_C','trap_D']:
+for tf in ['trap_A','trap_B','trap_C','trap_D','case_A','case_B','case_C','case_D']:
     if os.path.exists(os.path.join(os.path.dirname(__file__), tf+'.py')):
         importlib.import_module(tf)
 
 out_dir = sys.argv[1] if len(sys.argv) > 1 else '/home/claude/JAIIB'
 # keep only questions for chapters whose notes exist (release in batches)
-bank = [q for q in qb.QS if q['ch'] in built]
+DROP_BASIC = set(os.environ.get('DROP','').split())
+bank = [q for q in qb.QS if q['ch'] in built and not (qb.is_basic(q) and q['ch'][0] in DROP_BASIC)]
+for q in bank:
+    q['lv'] = 'basic' if qb.is_basic(q) else 'exam'
 ids = [q['id'] for q in bank]
 assert len(ids) == len(set(ids)), 'duplicate ids'
 for q in bank:
@@ -33,6 +36,7 @@ json.dump(bank, open(os.path.join(out_dir, 'bank_afm.json'), 'w'), ensure_ascii=
 json.dump(notes, open(os.path.join(out_dir, 'notes_afm.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
 cnt = Counter(q['ch'] for q in bank)
 print('chapters:', built)
-print('questions:', len(bank), ' PYQ:', sum(1 for q in bank if q['id'].startswith('AF-May26')), ' practice:', sum(1 for q in bank if q['id'].startswith('AF-X')), ' trap:', sum(1 for q in bank if q['id'].startswith('AF-G')))
+print('questions:', len(bank), ' PYQ:', sum(1 for q in bank if q['id'].startswith('AF-May26')), ' practice:', sum(1 for q in bank if q['id'].startswith('AF-X')), ' trap:', sum(1 for q in bank if q['id'].startswith('AF-G')), ' case:', sum(1 for q in bank if q['id'].startswith('AF-H')))
 print(' '.join(f'{c}:{cnt[c]}' for c in built))
+print('levels', Counter(q['lv'] for q in bank)); print('exam by ch', ' '.join(f"{c}:{sum(1 for q in bank if q['ch']==c and q['lv']=='exam')}" for c in built))
 print('answer spread', Counter(q['a'] for q in bank))

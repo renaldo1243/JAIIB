@@ -220,23 +220,24 @@ function buildDaily(){
   }
   return {due:due.length,fresh:fresh.length,qs:shuffle(qs).map(q=>q.id)};
 }
-function buildTopic(ch){
-  const all=BANK.filter(q=>q.ch===ch);
+function isDrill(q){return SUB==='AFM'?q.lv==='exam':/^(IE|RB)-G-/.test(q.id)}
+function buildTopic(ch,lv){
+  const all=BANK.filter(q=>q.ch===ch&&(!lv||q.lv===lv));
   const unseen=shuffle(all.filter(q=>!card(q.id)));
   const weak=shuffle(all.filter(q=>card(q.id)&&card(q.id).b<3));
   const rest=shuffle(all.filter(q=>card(q.id)&&card(q.id).b>=3));
   return unseen.concat(weak,rest).map(q=>q.id); // whole chapter in one round
 }
 function buildNew(ch){
-  const all=BANK.filter(q=>/^(IE|RB|AF)-G-/.test(q.id)&&(!ch||q.ch===ch));
+  const all=BANK.filter(q=>isDrill(q)&&(!ch||q.ch===ch));
   const unseen=all.filter(q=>!card(q.id)), weak=shuffle(all.filter(q=>card(q.id)&&card(q.id).b<3));
   const pick=ch?shuffle(unseen):interleave(unseen.filter(q=>!S.studied.length||S.studied.includes(q.ch))).concat(shuffle(unseen));
   return ch?[...new Set(pick.concat(weak,shuffle(all)))].map(q=>q.id):[...new Set(pick.concat(weak))].slice(0,20).map(q=>q.id);
 }
 function newCardHtml(){
-  const all=BANK.filter(q=>/^(IE|RB|AF)-G-/.test(q.id)); if(!all.length) return '';
+  const all=BANK.filter(q=>isDrill(q)); if(!all.length) return '';
   const left=all.filter(q=>!card(q.id)).length;
-  return `<section class="card"><div class="eyebrow">${SUB==='AFM'?'Beat the examiner':'Beyond past papers'}</div><h2>${SUB==='AFM'?'Trap drill':'New-angle questions'}</h2><p style="margin:0">${all.length} ${SUB==='AFM'?'questions built on the traps examiners set — wrong options are the classic mistakes.':'questions on facts that past papers have <b>not</b> asked yet — the likely new questions.'} <b>${left}</b> not tried yet.</p><div class="row"><button class="primary" id="newall">${SUB==='AFM'?'Practise 20 trap questions':'Practise 20 new-angle questions'}</button></div><p class="note">Also available chapter-wise: the “${SUB==='AFM'?'Trap drill':'New angle'}” button next to each chapter.</p></section>`;
+  return `<section class="card"><div class="eyebrow">${SUB==='AFM'?'Beat the examiner':'Beyond past papers'}</div><h2>${SUB==='AFM'?'Exam level':'New-angle questions'}</h2><p style="margin:0">${all.length} ${SUB==='AFM'?'questions at the level of the real paper: May 2026 questions and May 2026-style cases. Each chapter also has a Basic set for revision.':'questions on facts that past papers have <b>not</b> asked yet — the likely new questions.'} <b>${left}</b> not tried yet.</p><div class="row"><button class="primary" id="newall">${SUB==='AFM'?'Practise 20 exam-level questions':'Practise 20 new-angle questions'}</button></div><p class="note">Also available chapter-wise: the “${SUB==='AFM'?'Exam level':'New angle'}” button next to each chapter.</p></section>`;
 }
 function mistakes(){return BANK.filter(q=>{const c=card(q.id);return c&&c.lw})}
 
@@ -425,7 +426,7 @@ function render(){
       ledger+=`<div class="ch"><span class="code">${c}</span><div class="name"><div>${esc(CH[c])}</div>
       <div class="bar" title="${s.solid} solid, ${s.learn} learning, ${s.weak} to fix, of ${s.n}"><i class="s" style="width:${pct(s.solid)}%"></i><i class="l" style="width:${pct(s.learn)}%"></i><i class="w" style="width:${pct(s.weak)}%"></i></div>
       <div class="note">${s.seen}/${s.n} attempted${s.weak?` · <span style="color:var(--bad)">${s.weak} to fix</span>`:''}</div></div>
-      <div class="act"><button data-notes="${c}">Notes</button><button data-topic="${c}">Practise all ${s.n}</button>${BANK.some(q=>q.ch===c&&/^(IE|RB|AF)-G-/.test(q.id))?`<button data-new="${c}">${SUB==='AFM'?'Trap drill':'New angle'} ${BANK.filter(q=>q.ch===c&&/^(IE|RB|AF)-G-/.test(q.id)).length}</button>`:''}<button class="studied" data-st="${c}" aria-pressed="${st}" title="Include in daily quiz">${st?'✓ Studied':'Mark studied'}</button></div></div>`});
+      <div class="act"><button data-notes="${c}">Notes</button>${SUB==='AFM'?`<button data-basic="${c}">Basic ${BANK.filter(q=>q.ch===c&&q.lv==='basic').length}</button>`:`<button data-topic="${c}">Practise all ${s.n}</button>`}${BANK.some(q=>q.ch===c&&isDrill(q))?`<button data-new="${c}">${SUB==='AFM'?'Exam level':'New angle'} ${BANK.filter(q=>q.ch===c&&isDrill(q)).length}</button>`:''}<button class="studied" data-st="${c}" aria-pressed="${st}" title="Include in daily quiz">${st?'✓ Studied':'Mark studied'}</button></div></div>`});
   });
   app.innerHTML=hdr+`
   <section class="card today"><div class="eyebrow">Today · ${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'short'})}</div><h2>Daily quiz</h2>${todayBody}</section>
@@ -446,6 +447,7 @@ function render(){
   <p class="note" id="sync">${esc(syncMsg)}</p>`;
   app.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{const c=b.dataset.st; const i=S.studied.indexOf(c); if(i<0) S.studied.push(c); else S.studied.splice(i,1); save(); render()});
   app.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>start('topic',buildTopic(b.dataset.topic),b.dataset.topic));
+  app.querySelectorAll('[data-basic]').forEach(b=>b.onclick=()=>start('topic',buildTopic(b.dataset.basic,'basic'),b.dataset.basic));
   app.querySelectorAll('[data-new]').forEach(b=>b.onclick=()=>start('new',buildNew(b.dataset.new),b.dataset.new));
   on2('newall',()=>start('new',buildNew(null)));
   app.querySelectorAll('[data-notes]').forEach(b=>b.onclick=()=>notesView(b.dataset.notes));
@@ -459,7 +461,7 @@ function render(){
 }
 function recentHtml(){
   const s=S.sessions.slice(-5).reverse(); if(!s.length) return '';
-  return `<section class="card"><h2>Recent rounds</h2><div class="list">${s.map(x=>`<div class="wrongitem"><span class="mono">${x.t.slice(5)}</span><span>${x.m==='topic'?'Topic '+esc(x.ch):x.m==='new'?(SUB==='AFM'?'Trap drill':'New angle')+(x.ch?' '+esc(x.ch):''):x.m==='mistakes'?'Mistake review':x.m==='mock'?'Mock test':'Daily quiz'}</span><b class="mono" style="margin-left:auto">${x.c}/${x.n}</b></div>`).join('')}</div></section>`;
+  return `<section class="card"><h2>Recent rounds</h2><div class="list">${s.map(x=>`<div class="wrongitem"><span class="mono">${x.t.slice(5)}</span><span>${x.m==='topic'?'Topic '+esc(x.ch):x.m==='new'?(SUB==='AFM'?'Exam level':'New angle')+(x.ch?' '+esc(x.ch):''):x.m==='mistakes'?'Mistake review':x.m==='mock'?'Mock test':'Daily quiz'}</span><b class="mono" style="margin-left:auto">${x.c}/${x.n}</b></div>`).join('')}</div></section>`;
 }
 function on2(id,f){const e=$('#'+id); if(e) e.onclick=f}
 function start(mode,ids,ch){
@@ -471,6 +473,7 @@ function srcTag(q){
   if(/^PYQ/.test(s)){const when=s.replace(/^PYQ\s*·\s*/,'').replace(/\(.*?\)/g,'').trim();return `<div class="pyq">★ Previous-year question · asked in ${esc(when)}</div>`}
   if(/^New angle/.test(s)) return `<div class="srcl">New angle · not asked in past papers yet</div>`;
   if(/^Trap drill/.test(s)) return `<div class="srcl">Trap drill · the wrong options are classic exam traps</div>`;
+  if(/May 2026 exam style/.test(s)) return `<div class="srcl">Exam-style case · written like the May 2026 paper</div>`;
   return `<div class="srcl">${esc(s.split('·')[0].trim()||'Practice')} · original practice question</div>`;
 }
 function quiz(){
@@ -479,7 +482,7 @@ function quiz(){
   if(Q.i>=Q.ids.length) return finish();
   const q=BYID[Q.ids[Q.i]]; if(!q){Q.i++; return quiz()}
   const c=card(q.id);
-  const label=Q.m==='topic'?'Topic '+Q.ch:Q.m==='new'?(SUB==='AFM'?'Trap drill':'New angle')+(Q.ch?' '+Q.ch:''):Q.m==='mistakes'?'Mistake review':'Daily quiz';
+  const label=Q.m==='topic'?'Topic '+Q.ch:Q.m==='new'?(SUB==='AFM'?'Exam level':'New angle')+(Q.ch?' '+Q.ch:''):Q.m==='mistakes'?'Mistake review':'Daily quiz';
   app.innerHTML=hdr+`<section class="card">
   <div class="qtop"><span class="eyebrow">${esc(label)} · ${Q.i+1} of ${Q.ids.length}</span><button class="ghost small" id="quit">Save &amp; exit</button></div>
   <div class="prog"><i style="width:${100*Q.i/Q.ids.length}%"></i></div>
