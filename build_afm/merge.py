@@ -14,6 +14,9 @@ for c in CHAPTERS:
         importlib.import_module(f'ch_{c}')
         built.append(c)
 import pyq_may26  # adds PYQs
+for tf in ['trap_A','trap_B','trap_C','trap_D']:
+    if os.path.exists(os.path.join(os.path.dirname(__file__), tf+'.py')):
+        importlib.import_module(tf)
 
 out_dir = sys.argv[1] if len(sys.argv) > 1 else '/home/claude/JAIIB'
 # keep only questions for chapters whose notes exist (release in batches)
@@ -30,6 +33,6 @@ json.dump(bank, open(os.path.join(out_dir, 'bank_afm.json'), 'w'), ensure_ascii=
 json.dump(notes, open(os.path.join(out_dir, 'notes_afm.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
 cnt = Counter(q['ch'] for q in bank)
 print('chapters:', built)
-print('questions:', len(bank), ' PYQ:', sum(1 for q in bank if q['id'].startswith('AF-May26')), ' practice:', sum(1 for q in bank if q['id'].startswith('AF-X')))
+print('questions:', len(bank), ' PYQ:', sum(1 for q in bank if q['id'].startswith('AF-May26')), ' practice:', sum(1 for q in bank if q['id'].startswith('AF-X')), ' trap:', sum(1 for q in bank if q['id'].startswith('AF-G')))
 print(' '.join(f'{c}:{cnt[c]}' for c in built))
 print('answer spread', Counter(q['a'] for q in bank))

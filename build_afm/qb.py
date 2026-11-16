@@ -12,13 +12,14 @@ def note(ch, html):
     NOTES[ch] = html.strip()
 
 
-def Q(ch, stem, correct, wrongs, expl, fixed=False, src='Practice · exam-level (original)'):
+def Q(ch, stem, correct, wrongs, expl, fixed=False, src='Practice · exam-level (original)', pre='AF-X'):
     """correct = right option text; wrongs = list of 3 distractors.
     Options are shuffled per question (seeded by id) unless fixed=True or an option is
     an 'all/none/both' type, which then stays last."""
     assert len(wrongs) == 3, (ch, stem[:60])
-    _count[ch] = _count.get(ch, 0) + 1
-    qid = f"AF-X-{ch}-{_count[ch]:02d}"
+    key = pre + ch
+    _count[key] = _count.get(key, 0) + 1
+    qid = f"{pre}-{ch}-{_count[key]:02d}"
     opts = [correct] + list(wrongs)
     if fixed:
         order = list(range(4))
@@ -54,3 +55,8 @@ def money(x, d=0):
         i = ','.join(parts + [tail])
     r = i + ('.' + f if f else '')
     return ('-' if neg else '') + r
+
+
+def T(ch, stem, correct, wrongs, expl, fixed=False):
+    """Trap-drill question: wrong options are the classic exam traps."""
+    return Q(ch, stem, correct, wrongs, expl, fixed=fixed, src='Trap drill · exam trap (original)', pre='AF-G')
